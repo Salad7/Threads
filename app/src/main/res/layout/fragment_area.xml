@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/area_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Eiffel Tower"
+        android:textAlignment="center"
+        android:textSize="24sp" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:id="@+id/area_list"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/area_title" />
+
+</RelativeLayout>
