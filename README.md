@@ -11,10 +11,10 @@ public class driver {
 	final static double lonDistFromCenter = 0.000100;
 
 	public static void main(String[] args){
-//		double lat = 35.281412;
-//		double lon = -80.770331;
-		double lat = 5.000000;
-		double lon = -5.000000;
+		double lat = 35.281412;
+		double lon = -80.770331;
+		//double lat = 5.000000;
+		//double lon = -5.000000;
 		//quad2 bounds
 		//double latUpperBound = lat + latDistFromCenter;
 		//double lonLowerBound = lon - lonDistFromCenter;
@@ -33,14 +33,15 @@ public class driver {
 		//System.out.println("Lat Starting at  " + mnp(la-latDistFromCenter) + " ending at " + mnp(la+latDistFromCenter));
 		//System.out.println("Lon Starting at  " + mnp(lo-lonDistFromCenter) + " ending at " + mnp(lo+lonDistFromCenter));
 		System.out.println("Lat start " + la);
-		//System.out.println("Lon start " + lo);
-		for(double lonPos = 0; lonPos <= 200; lonPos+=1){	
-			for(double latPos = 0; latPos <= 100; latPos+=1){
+		System.out.println("Lon start " + lo);
+		for(double lonPos = 0; lonPos < 200; lonPos+=1){	
+			lo = mnp(lo+0.000001);
+			for(double latPos = 0; latPos < 200; latPos+=1){
 				la = mnp(la+0.000001);
 				System.out.println(" Lat " + mnp(la) + " Lon " + mnp(lo));
 				//System.out.println("La now "+mnp(la)+" run throughs "+mnp(latPos));
 			}
-			lo = mnp(lo+0.000001);
+			
 			la = resetVal;
 //			System.out.println("Lo now "+mnp(lo)+" run throughs "+mnp(lonPos));
 		}
