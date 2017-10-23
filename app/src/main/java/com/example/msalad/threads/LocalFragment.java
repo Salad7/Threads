@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,12 +27,19 @@ import java.util.UUID;
 
 public class LocalFragment extends Fragment {
 
-
+    ListView listView;
+    LocalFragmentItemAdapter localFragmentItemAdapter;
+    List<Topics> topics;
+    FloatingActionButton post;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_local,container,false);
+        post = v.findViewById(R.id.postBtn);
+        listView = v.findViewById(R.id.local_list);
+        topics = new ArrayList<>();
+        localFragmentItemAdapter = new LocalFragmentItemAdapter(getContext(),R.layout.custom_topic,topics);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 

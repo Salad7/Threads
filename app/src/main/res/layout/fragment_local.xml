@@ -24,16 +24,16 @@
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/floatingActionButton2"
+        android:layout_alignTop="@+id/postBtn"
         android:layout_marginEnd="10dp"
-        android:layout_toStartOf="@+id/floatingActionButton2"
+        android:layout_toStartOf="@+id/postBtn"
         android:background="@drawable/sms"
         android:visibility="gone"
         app:backgroundTint="@color/colorPrimary"
         app:srcCompat="@drawable/sms" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton2"
+        android:id="@+id/postBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/sms"
