@@ -59,16 +59,15 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_main);
         // Construct a GeoDataClient.
         mGeoDataClient = Places.GeoDataApi;
-
         // Construct a PlaceDetectionClient.
         mPlaceDetectionClient = Places.PlaceDetectionApi;
-
         // Construct a FusedLocationProviderClient.
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
 //        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
 //                .findFragmentById(R.id.map);
 //        mapFragment.getMapAsync(this);
+
 
     }
 
@@ -176,7 +175,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         // Turn on the My Location layer and the related control on the map.
         updateLocationUI();
-
         // Get the current location of the device and set the position of the map.
         getDeviceLocation();
     }
