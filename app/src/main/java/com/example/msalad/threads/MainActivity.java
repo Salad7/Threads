@@ -1,5 +1,8 @@
 package com.example.msalad.threads;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
@@ -24,6 +27,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -43,7 +53,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int DEFAULT_ZOOM = 15;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean mLocationPermissionGranted;
-
+    private DatabaseReference threadRef;
+    private ArrayList<LatLon> coors_near_me;
+    private String threadCode;
+    private String MY_PREFS_NAME = "MY_PREFS_NAME";
     // The geographical location where the device is currently located. That is, the last-known
     // location retrieved by the Fused Location Provider.
     private Location mLastKnownLocation;
@@ -68,7 +81,62 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 //                .findFragmentById(R.id.map);
 //        mapFragment.getMapAsync(this);
         //for(int i = 0; i < 15; i)
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        threadRef = database.getReference();
+        coors_near_me =  ThreadFinder.runSimulationQuad2(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude());
+        printNearLocs();
+        searchIfThreadExistsInFirebase();
 
+    }
+
+    private void printNearLocs(){
+        for(int i =0; i < coors_near_me.size(); i++){
+            System.out.println(coors_near_me.get(i));
+        }
+    }
+
+    private void searchIfThreadExistsInFirebase(){
+        threadRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for(int i = 0; i < coors_near_me.size(); i++){
+                    Double lat = coors_near_me.get(i).lat;
+                    Double lon = coors_near_me.get(i).lon;
+                    int posOfPeriod = (lat+"").indexOf(".");
+                    String pos1 = lat+"".substring(0,posOfPeriod);
+                    int posOfPeriodForLon = (lon+"").indexOf(".");
+                    String pos2 = lon+"".substring(0,posOfPeriodForLon);
+                    String testKey = pos1+"!"+pos1 + "*" + pos2+"!"+pos2;
+                    Log.d("testKey",testKey);
+                    if(dataSnapshot.child("Threads").child(testKey).exists()){
+                        SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+                        editor.putString("threadCode", testKey);
+                        Intent intent = new Intent(MainActivity.this,ThreadActivity.class);
+                        startActivity(intent);
+                    }
+                }
+                Double lat = mLastKnownLocation.getLatitude();
+                Double lon = mLastKnownLocation.getLongitude();
+                int posOfPeriod = (lat+"").indexOf(".");
+                String pos1 = lat+"".substring(0,posOfPeriod);
+                int posOfPeriodForLon = (lon+"").indexOf(".");
+                String pos2 = lon+"".substring(0,posOfPeriodForLon);
+                String pureKey = pos1+"!"+pos1 + "*" + pos2+"!"+pos2;
+                SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+                editor.putString("threadCode", pureKey);
+                Intent intent = new Intent(MainActivity.this,CreateThread.class);
+                startActivity(intent);
+
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void getLocationPermission() {
