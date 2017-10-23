@@ -17,7 +17,7 @@ public class ThreadActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabbar);
-        tabHost = (TabHost) findViewById(R.id.tab_host);
+        tabHost = (TabHost) findViewById(R.id.tabs_host);
         tabHost.setup();
         TabHost.TabSpec spec = tabHost.newTabSpec("Same Room");
         spec.setContent(R.layout.fragment_local);

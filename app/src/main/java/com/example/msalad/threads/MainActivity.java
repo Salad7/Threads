@@ -27,6 +27,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -49,7 +50,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     // A default location (Sydney, Australia) and default zoom to use when location permission is
     // not granted.
-    private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
+    //private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
     private static final int DEFAULT_ZOOM = 15;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean mLocationPermissionGranted;
@@ -64,12 +65,17 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     // Keys for storing activity state.
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
+    private  FirebaseDatabase database;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        FirebaseApp.initializeApp(this);
+      //  SupportMapFragment mapFragment = (SupportMapFragment) findFragmentById(R.id.map2);
+        //if (mapFragment != null) {
+        //mapFragment.getMapAsync(this);
         // Construct a GeoDataClient.
         mGeoDataClient = Places.GeoDataApi;
         // Construct a PlaceDetectionClient.
@@ -81,11 +87,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 //                .findFragmentById(R.id.map);
 //        mapFragment.getMapAsync(this);
         //for(int i = 0; i < 15; i)
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        database = FirebaseDatabase.getInstance();
         threadRef = database.getReference();
-        coors_near_me =  ThreadFinder.runSimulationQuad2(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude());
+        coors_near_me =  ThreadFinder.runSimulationQuad2(-122.406417,37.785834);
         printNearLocs();
         searchIfThreadExistsInFirebase();
+
 
     }
 
@@ -103,11 +110,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 for(int i = 0; i < coors_near_me.size(); i++){
                     Double lat = coors_near_me.get(i).lat;
                     Double lon = coors_near_me.get(i).lon;
-                    int posOfPeriod = (lat+"").indexOf(".");
-                    String pos1 = lat+"".substring(0,posOfPeriod);
-                    int posOfPeriodForLon = (lon+"").indexOf(".");
-                    String pos2 = lon+"".substring(0,posOfPeriodForLon);
-                    String testKey = pos1+"!"+pos1 + "*" + pos2+"!"+pos2;
+                    StringBuilder stringBuilder = new StringBuilder();
+
+                    String[] pos1 = (lat+"").split("\\.");
+                    //Log.d("MainActivityCrash ","lat "+lat+" lon "+lon + " pos1 " + pos1.length);
+                    String[] pos2 = (lon+"").split("\\.");
+                    String testKey = pos1[0]+"!"+pos1[1] + "*" + pos2[0]+"!"+pos2[1];
                     Log.d("testKey",testKey);
                     if(dataSnapshot.child("Threads").child(testKey).exists()){
                         SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
@@ -116,17 +124,17 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                         startActivity(intent);
                     }
                 }
-                Double lat = mLastKnownLocation.getLatitude();
-                Double lon = mLastKnownLocation.getLongitude();
-                int posOfPeriod = (lat+"").indexOf(".");
-                String pos1 = lat+"".substring(0,posOfPeriod);
-                int posOfPeriodForLon = (lon+"").indexOf(".");
-                String pos2 = lon+"".substring(0,posOfPeriodForLon);
-                String pureKey = pos1+"!"+pos1 + "*" + pos2+"!"+pos2;
+                Double lat = 35.3070930;
+                Double lon = -80.7351640;
+                String[] pos1 = (lat+"").split("\\.");
+                Log.d("MainActivityCrash ","lat "+lat+" lon "+lon + " pos1 " + pos1.length);
+                String[] pos2 = (lon+"").split("\\.");
+                String pureKey = pos1[0]+"!"+pos1[1] + "*" + pos2[0]+"!"+pos2[1];
                 SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
                 editor.putString("threadCode", pureKey);
                 Intent intent = new Intent(MainActivity.this,CreateThread.class);
                 startActivity(intent);
+                Log.d("should CreateThread","SS");
 
 
 
@@ -192,6 +200,11 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
     private void getDeviceLocation() {
     /*
      * Get the best and most recent location of the device, which may be null in rare
@@ -212,16 +225,20 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                         } else {
                             //Log.d(TAG, "Current location is null. Using defaults.");
                             //Log.e(TAG, "Exception: %s", task.getException());
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
-                            mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                            //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastKnownLocation.,2.3), DEFAULT_ZOOM));
+                            //mMap.getUiSettings().setMyLocationButtonEnabled(false);
                         }
                         Toast.makeText(getApplicationContext(),mLastKnownLocation.getLongitude() + " " + mLastKnownLocation.getLatitude(),Toast.LENGTH_SHORT).show();
                     }
                 });
+
             }
         } catch(SecurityException e)  {
             Log.e("Exception: %s", e.getMessage());
         }
+
+
+
     }
 
     /**
@@ -245,5 +262,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         updateLocationUI();
         // Get the current location of the device and set the position of the map.
         getDeviceLocation();
+        Log.d("MapReady","MapReady");
     }
 }
