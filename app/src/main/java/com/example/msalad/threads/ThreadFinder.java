@@ -18,9 +18,9 @@ public class ThreadFinder {
     //Distance away from center to calculate
     final static double lonDistFromCenter = 0.000100;
 
-    public static void main(String[] args){
-        double lat = 35.281412;
-        double lon = -80.770331;
+   // public static void main(String[] args){
+     //   double lat = 35.281412;
+       // double lon = -80.770331;
 //		double lat = -5.000000;
 //		double lon = -5.000000;
 //		double lat = 35.307330;
@@ -34,8 +34,8 @@ public class ThreadFinder {
         //System.out.println("Quad 3" + " Latitude " +mnp(lat-latDistFromCenter)  + " Longitude "+ mnp(lon-lonDistFromCenter));
         //System.out.println("Quad 4" + " Latitude " +mnp(lat-latDistFromCenter)  + " Longitude "+ mnp(lon+lonDistFromCenter));
 
-        System.out.println(runSimulationQuad2(mnp(lat-0.000100),mnp(lon-0.000100)).size() + " Coordinates found!");
-    }
+       // System.out.println(runSimulationQuad2(mnp(lat-0.000100),mnp(lon-0.000100)).size() + " Coordinates found!");
+    //}
 
     public static ArrayList<LatLon> runSimulationQuad2(double la, double lo){
         ArrayList<LatLon> ll = new ArrayList<>();
