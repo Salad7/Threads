@@ -121,9 +121,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                     //Log.d("MainActivityCrash ","lat "+lat+" lon "+lon + " pos1 " + pos1.length);
                     String[] pos2 = (lon + "").split("\\.");
                     String testKey = pos1[0] + "!" + pos1[1] + "*" + pos2[0] + "!" + pos2[1];
-                    Log.d("testKey " + i, testKey);
+                    //Log.d("testKey " + i, testKey);
                     if (dataSnapshot.child("Threads").child(testKey).exists()) {
-                        Log.d("testKey", "Found Thread! " + i);
+                        //Log.d("testKey", "Found Thread! " + i);
                         SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
                         editor.putString("threadCode", testKey);
                         editor.apply();
@@ -138,14 +138,14 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                     Double lat = 35.307093;
                     Double lon = -80.735164;
                     String[] pos1 = (lat + "").split("\\.");
-                    Log.d("MainActivityCrash ", "lat " + lat + " lon " + lon + " pos1 " + pos1.length);
+                   // Log.d("MainActivityCrash ", "lat " + lat + " lon " + lon + " pos1 " + pos1.length);
                     String[] pos2 = (lon + "").split("\\.");
                     String pureKey = pos1[0] + "!" + pos1[1] + "*" + pos2[0] + "!" + pos2[1];
                     SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
                     editor.putString("threadCode", pureKey);
                     editor.apply();
                     Intent intent = new Intent(MainActivity.this, CreateThread.class);
-                    // startActivity(intent);
+                     startActivity(intent);
                     Log.d("should CreateThread", "SS");
                 }
 

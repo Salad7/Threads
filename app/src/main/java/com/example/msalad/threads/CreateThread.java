@@ -99,10 +99,10 @@ public class CreateThread extends AppCompatActivity {
         map.put("threadTitle",threadTitle);
         map.put("timeStamp",time);
         map.put("threadTitle",threadTitle);
-        map2.put("upvoters",u);
-        DatabaseReference threadTopicRoot = threadRef.child("Threads").child(threadCode).child("topics").child("0");
-        threadTopicRoot.updateChildren(map2);
-        threadRoot.updateChildren(map);
+        //map2.put("upvoters",u);
+        //DatabaseReference threadTopicRoot = threadRef.child("Threads").child(threadCode).child("topics").child("0");
+        //threadTopicRoot.updateChildren(map2);
+       threadRoot.updateChildren(map);
 
     }
 

@@ -17,7 +17,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -76,26 +78,37 @@ public class LocalFragment extends Fragment {
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    builder = new AlertDialog.Builder(getContext(), android.R.style.Theme_Material_Dialog_Alert);
-                } else {
-                    builder = new AlertDialog.Builder(getContext());
-                }
-                builder.setTitle("Delete entry")
-                        .setMessage("Are you sure you want to delete this entry?")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+                alertDialog.setTitle("Create a topic");
+
+                final EditText input = new EditText(getActivity());
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT);
+                input.setLayoutParams(lp);
+                alertDialog.setView(input);
+
+                alertDialog.setPositiveButton("Create",
+                        new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                // continue with delete
+                                String topic = input.getText().toString();
+                                if (topic.length() > 0) {
+                                        Toast.makeText(getActivity(),
+                                                "Topic created!", Toast.LENGTH_SHORT).show();
+                                    createTopic(topic);
+                                }
                             }
-                        })
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        });
+
+                alertDialog.setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                // do nothing
+                                dialog.cancel();
                             }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
+                        });
+
+                alertDialog.show();
+
             }
         });
         return v;
@@ -109,6 +122,7 @@ public class LocalFragment extends Fragment {
                     topics.clear();
                     DataSnapshot threadPath =  dataSnapshot.child("Threads").child(threadCode);
                     threadTitle = threadPath.child("threadTitle").getValue(String.class);
+                    threadTitleTV.setText(threadTitle);
                     ArrayList<String> locUpvoters = new ArrayList<String>();
                     if(threadPath.child("topics").exists()){
                         DataSnapshot topicPath = threadPath.child("topics");
@@ -163,6 +177,23 @@ public class LocalFragment extends Fragment {
         localFragmentItemAdapter = new LocalFragmentItemAdapter(getContext(),R.layout.custom_topic,topics);
         localFragmentItemAdapter.setNotifyOnChange(true);
 
+
+    }
+
+    public void createTopic(String title){
+        HashMap<String,String> map = new HashMap<String,String>();
+        map.put("threadTitle",title);
+        threadRef.child("Threads").child(threadCode).updateChildren(map);
+        threadRef.child("Threads").child(threadCode).child("topics").child(openSpotInFirebase+"").child("anonCode").updateChildren(["".getUID():"red"])
+
+        threadRef.child("Threads").child(threadCode).child("topics").child(openSpotInFirebase+"").updateChildren(["parent":defaults.string(forKey: "threadCode")])
+        threadRef.child("Threads").child(threadCode).child("topics").child(openSpotInFirebase+"").updateChildren(["UID":"".getUID()])
+        threadRef.child("Threads").child(threadCode).child("topics").child(openSpotInFirebase+"").updateChildren(["position":topicPosition])
+        threadRef.child("Threads").child(threadCode).child("topics").child(openSpotInFirebase+"").updateChildren(["replies":0])
+        threadRef.child("Threads").child(threadCode).child("topics").child(openSpotInFirebase+"").updateChildren(["upvotes":0])
+        threadRef.child("Threads").child(threadCode).child("topics").child(openSpotInFirebase+"").updateChildren(["topicTitle": alert.textFields![0].text])
+        threadRef.child("Threads").child(threadCode).child("topics").child(openSpotInFirebase+"").updateChildren(["timeStamp":Date().toMillis()])
+        threadRef.child("Threads").child(threadCode).updateChildren(["UIDs" :"".getUID()])
 
     }
 
