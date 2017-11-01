@@ -61,6 +61,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     // The geographical location where the device is currently located. That is, the last-known
     // location retrieved by the Fused Location Provider.
     private Location mLastKnownLocation;
+    boolean isFound = false;
 
     // Keys for storing activity state.
     private static final String KEY_CAMERA_POSITION = "camera_position";
@@ -89,8 +90,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         //for(int i = 0; i < 15; i)
         database = FirebaseDatabase.getInstance();
         threadRef = database.getReference();
-        coors_near_me =  ThreadFinder.runSimulationQuad2(-122.406417,37.785834);
-        printNearLocs();
+        coors_near_me =  ThreadFinder.runSimulationQuad2(35.307093-.000005,-80.735164-.000005);
+        //printNearLocs();
         searchIfThreadExistsInFirebase();
 
 
@@ -98,8 +99,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void printNearLocs(){
         for(int i =0; i < coors_near_me.size(); i++){
-            System.out.println(coors_near_me.get(i));
+            //Log.d("coors ",i+" Lat "+coors_near_me.get(i).lat+" Lon "+coors_near_me.get(i).lon);
         }
+    }
+
+    public void threadFound(){
+
     }
 
     private void searchIfThreadExistsInFirebase(){
@@ -107,35 +112,42 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                for(int i = 0; i < coors_near_me.size(); i++){
+                for(int i = 0; i < coors_near_me.size(); i++) {
                     Double lat = coors_near_me.get(i).lat;
                     Double lon = coors_near_me.get(i).lon;
                     StringBuilder stringBuilder = new StringBuilder();
 
-                    String[] pos1 = (lat+"").split("\\.");
+                    String[] pos1 = (lat + "").split("\\.");
                     //Log.d("MainActivityCrash ","lat "+lat+" lon "+lon + " pos1 " + pos1.length);
-                    String[] pos2 = (lon+"").split("\\.");
-                    String testKey = pos1[0]+"!"+pos1[1] + "*" + pos2[0]+"!"+pos2[1];
-                    Log.d("testKey",testKey);
-                    if(dataSnapshot.child("Threads").child(testKey).exists()){
+                    String[] pos2 = (lon + "").split("\\.");
+                    String testKey = pos1[0] + "!" + pos1[1] + "*" + pos2[0] + "!" + pos2[1];
+                    Log.d("testKey " + i, testKey);
+                    if (dataSnapshot.child("Threads").child(testKey).exists()) {
+                        Log.d("testKey", "Found Thread! " + i);
                         SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
                         editor.putString("threadCode", testKey);
-                        Intent intent = new Intent(MainActivity.this,ThreadActivity.class);
+                        editor.apply();
+                        Intent intent = new Intent(MainActivity.this, ThreadActivity.class);
                         startActivity(intent);
+                        isFound = true;
+                        break;
                     }
-                }
-                Double lat = 35.3070930;
-                Double lon = -80.7351640;
-                String[] pos1 = (lat+"").split("\\.");
-                Log.d("MainActivityCrash ","lat "+lat+" lon "+lon + " pos1 " + pos1.length);
-                String[] pos2 = (lon+"").split("\\.");
-                String pureKey = pos1[0]+"!"+pos1[1] + "*" + pos2[0]+"!"+pos2[1];
-                SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-                editor.putString("threadCode", pureKey);
-                Intent intent = new Intent(MainActivity.this,CreateThread.class);
-                startActivity(intent);
-                Log.d("should CreateThread","SS");
 
+                }
+                if (!isFound) {
+                    Double lat = 35.307093;
+                    Double lon = -80.735164;
+                    String[] pos1 = (lat + "").split("\\.");
+                    Log.d("MainActivityCrash ", "lat " + lat + " lon " + lon + " pos1 " + pos1.length);
+                    String[] pos2 = (lon + "").split("\\.");
+                    String pureKey = pos1[0] + "!" + pos1[1] + "*" + pos2[0] + "!" + pos2[1];
+                    SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+                    editor.putString("threadCode", pureKey);
+                    editor.apply();
+                    Intent intent = new Intent(MainActivity.this, CreateThread.class);
+                    // startActivity(intent);
+                    Log.d("should CreateThread", "SS");
+                }
 
 
             }

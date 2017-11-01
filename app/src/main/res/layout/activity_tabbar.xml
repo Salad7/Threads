@@ -3,15 +3,11 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TabHost
+    <android.support.v4.app.FragmentTabHost
         android:layout_width="match_parent"
         android:id="@+id/tabs_host"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
 
             <TabWidget
                 android:id="@android:id/tabs"
@@ -38,6 +34,5 @@
                 </LinearLayout>
 
             </FrameLayout>
-        </LinearLayout>
-    </TabHost>
+    </android.support.v4.app.FragmentTabHost>
 </LinearLayout>

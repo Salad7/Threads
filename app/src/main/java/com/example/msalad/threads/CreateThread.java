@@ -113,9 +113,9 @@ public class CreateThread extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         threadRef = database.getReference();
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-        String restoredText = prefs.getString("text", null);
-        if (restoredText != null) {
+        //String restoredText = prefs.getString("text", null);
+       // if (restoredText != null) {
             threadCode = prefs.getString("threadCode", "8080");//"No name defined" is the default value.
-        }
+        //}
     }
 }
