@@ -1,5 +1,6 @@
 package com.example.msalad.threads;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -50,6 +51,7 @@ public class CreateThread extends AppCompatActivity {
 
                 if(threadTitle.length() > 3){
                 createThread();
+                Intent i = new Intent(CreateThread.this,ThreadActivity.class);
                 }else{
                     Toast.makeText(CreateThread.this,"Please name your thread (more than 3 letters)",Toast.LENGTH_SHORT).show();
                 }
