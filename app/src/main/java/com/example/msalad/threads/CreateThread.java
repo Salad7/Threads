@@ -2,6 +2,7 @@ package com.example.msalad.threads;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -10,10 +11,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by cci-loaner on 10/23/17.
@@ -42,6 +48,12 @@ public class CreateThread extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                if(threadTitle.length() > 3){
+                createThread();
+                }else{
+                    Toast.makeText(CreateThread.this,"Please name your thread (more than 3 letters)",Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
@@ -61,6 +73,34 @@ public class CreateThread extends AppCompatActivity {
 
             }
         });
+
+    }
+
+
+
+    public void createThread(){
+        Thread t = new Thread();
+        ArrayList<String> u = new ArrayList<>();
+        String androidId = Settings.Secure.getString(getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        int time = (int) (System.currentTimeMillis());
+        Timestamp tsTemp = new Timestamp(time);
+        String ts =  tsTemp.toString();
+        u.add(androidId);
+        t.setAnons(u);
+        t.setThreadTitle(threadTitle);
+        t.setTimeStamp(time);
+        final Topics topic = new Topics();
+        DatabaseReference threadRoot = threadRef.child("Threads").child(threadCode);
+        HashMap map = new HashMap();
+        HashMap map2 = new HashMap();
+        map.put("threadTitle",threadTitle);
+        map.put("timeStamp",time);
+        map.put("threadTitle",threadTitle);
+        map2.put("upvoters",u);
+        DatabaseReference threadTopicRoot = threadRef.child("Threads").child(threadCode).child("topics").child("0");
+        threadTopicRoot.updateChildren(map2);
+        threadRoot.updateChildren(map);
 
     }
 
