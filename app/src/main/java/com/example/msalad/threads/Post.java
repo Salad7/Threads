@@ -1,5 +1,6 @@
 package com.example.msalad.threads;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +9,7 @@ import java.util.Map;
  * Created by cci-loaner on 10/23/17.
  */
 
-public class Post {
+public class Post implements Serializable{
 
     public Post() {
     }

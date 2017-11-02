@@ -2,6 +2,7 @@ package com.example.msalad.threads;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -73,6 +75,27 @@ public class LocalFragment extends Fragment {
         threadCode = prefs.getString("threadCode", "8080");//"No name defined" is the default value.
         post = v.findViewById(R.id.postBtn);
         listView = v.findViewById(R.id.local_list);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Post p = new Post();
+                Topics t = topics.get(i);
+                p.setUpvoters(t.getUpvoters());
+                p.setParent(t.getParent());
+                p.setPosition(t.getPosition());
+                p.setAnonCode(t.getAnonCode());
+                p.setHostUID(t.getHostUID());
+                p.setMessages(t.getMessages());
+                p.setReplies(t.getReplies());
+                p.setTimeStamp(t.getTimeStamp());
+                p.setTopicTitle(t.getTopicTitle());
+                String tt = threadTitle;
+                Intent intent = new Intent(getActivity(),PostActivity.class);
+                intent.putExtra("post",p);
+                intent.putExtra("tt",tt);
+                startActivity(intent);
+            }
+        });
         threadTitleTV = v.findViewById(R.id.textView8);
         topics = new ArrayList<>();
         localFragmentItemAdapter = new LocalFragmentItemAdapter(getContext(),R.layout.custom_topic,topics);
@@ -290,6 +313,28 @@ public class LocalFragment extends Fragment {
                         threadRef.child("Threads").child(threadCode).child("topics").child(topics.get(position).getPosition()+"").updateChildren(map);
                         //Update firebase here
                     }
+                }
+            });
+
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Post p = new Post();
+                    Topics t = topics.get(position);
+                    p.setUpvoters(t.getUpvoters());
+                    p.setParent(t.getParent());
+                    p.setPosition(t.getPosition());
+                    p.setAnonCode(t.getAnonCode());
+                    p.setHostUID(t.getHostUID());
+                    p.setMessages(t.getMessages());
+                    p.setReplies(t.getReplies());
+                    p.setTimeStamp(t.getTimeStamp());
+                    p.setTopicTitle(t.getTopicTitle());
+                    String tt = threadTitle;
+                    Intent intent = new Intent(getActivity(),PostActivity.class);
+                    intent.putExtra("post",p);
+                    intent.putExtra("tt",tt);
+                    startActivity(intent);
                 }
             });
 
