@@ -7,6 +7,7 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:elevation="4dp"
         android:orientation="horizontal"
         android:weightSum="1">
 
@@ -37,7 +38,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="999999"
+                android:layout_gravity="center"
+                android:text="0"
                 android:textSize="12sp" />
         </LinearLayout>
 
@@ -45,15 +47,16 @@
         <TextView
             android:visibility="visible"
             android:id="@+id/message_txt"
-            android:layout_width="280dp"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="24dp"
             android:layout_marginRight="8dp"
             android:text="If this gets enough votes, It'll go area widefdfddasdasdasfasdfasfadafasdfasdadddsf"
+            android:layout_marginStart="14dp"
             android:layout_alignTop="@+id/linearLayout"
             android:layout_toEndOf="@+id/linearLayout"
-            android:layout_marginStart="14dp" />
+            android:layout_alignBottom="@+id/linearLayout" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -72,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginRight="24dp"
-                android:text="1000 Replies"
+                android:text="0 Replies"
                 android:textAlignment="center"
                 android:textSize="10sp" />
 
@@ -82,7 +85,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:layout_marginRight="8dp"
-                android:text="37 Minutes ago"
+                android:text="Now"
                 android:textSize="10sp" />
         </LinearLayout>
         </RelativeLayout>
