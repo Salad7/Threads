@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class Message {
 
-    int position,upvotes,replies, timeStamp;
+    int position,replies, timeStamp;
     String topicTitle,parent,hostUID,msg;
     Map anonCode = new HashMap<String,String>();
     ArrayList<String> upvoters;
@@ -28,12 +28,9 @@ public class Message {
     }
 
     public int getUpvotes() {
-        return upvotes;
+        return upvoters.size();
     }
 
-    public void setUpvotes(int upvotes) {
-        this.upvotes = upvotes;
-    }
 
     public int getReplies() {
         return replies;
