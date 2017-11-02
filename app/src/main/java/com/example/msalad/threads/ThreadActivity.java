@@ -27,7 +27,7 @@ public class ThreadActivity extends AppCompatActivity {
         tabHost.setup(this,fragmentManager,android.R.id.tabcontent);
         LocalFragment localFragment = new LocalFragment();
         tabHost.addTab(tabHost.newTabSpec("Same Room").setIndicator("Same Room"),LocalFragment.class,null);
-        tabHost.addTab(tabHost.newTabSpec("Settings").setIndicator("Settings"),LocalFragment.class,null);
+        tabHost.addTab(tabHost.newTabSpec("Settings").setIndicator("Settings"),SettingsFragment.class,null);
 
 //        TabHost.TabSpec spec = tabHost.newTabSpec("Same Room");
 //        spec.setContent(new LocalFragment());
