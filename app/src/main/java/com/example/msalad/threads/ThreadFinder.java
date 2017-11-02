@@ -82,7 +82,7 @@ public static String getElapsedTime(int userTS){
     int daysCap = 51840000;
     int month = dt.getMonth();
     int monthsCamp = getLastDayInCalender(month);
-    int timestamp = (int) dt.getTime()/1000;
+    int timestamp = getTimeStamp();
     int difference = timestamp - userTS;
     int getSeconds = difference;
     //Limit seconds in a minute

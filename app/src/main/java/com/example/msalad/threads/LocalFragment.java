@@ -237,10 +237,8 @@ public class LocalFragment extends Fragment {
         topicsMap.put("replies",0);
         topicsMap.put("upvotes",0);
         topicsMap.put("topicTitle",title);
-        Date d = new Date();
-        int time = (int) (d.getTime());
-        Log.d("LocalFragment",time/1000+"");
-        topicsMap.put("timeStamp",time/1000);
+        Log.d("LocalFragment",ThreadFinder.getTimeStamp()+"");
+        topicsMap.put("timeStamp",ThreadFinder.getTimeStamp());
         ArrayList<String> anonUsers = new ArrayList<>();
         anonUsers.add(androidId);
         threadUsers.put("UIDs",anonUsers);

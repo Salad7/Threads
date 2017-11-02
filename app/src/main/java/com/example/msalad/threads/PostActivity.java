@@ -104,8 +104,6 @@ public class PostActivity extends AppCompatActivity {
                     message.setHostUID(androidId);
                     message.setReplies(0);
                     message.setUpvoters(new ArrayList<String>());
-                    Date d = new Date();
-                    int time = (int) (d.getTime());
                     message.setTimeStamp(ThreadFinder.getTimeStamp());
                     HashMap map = new HashMap();
                     HashMap messageMap = new HashMap();

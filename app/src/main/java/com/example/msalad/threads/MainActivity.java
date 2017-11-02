@@ -80,7 +80,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         FirebaseApp.initializeApp(this);
         Date d = new Date();
         //Calendar c
-        Log.d("time in millis",d.getTime()/1000+"");
+        //Log.d("time in millis",d.getTime()/1000+"");
       //  SupportMapFragment mapFragment = (SupportMapFragment) findFragmentById(R.id.map2);
         //if (mapFragment != null) {
         //mapFragment.getMapAsync(this);
@@ -115,69 +115,24 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void searchIfThreadExistsInFirebase(){
-        threadRef.addValueEventListener(new ValueEventListener() {
+
+        threadRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(int i = 0; i < coors_near_me.size(); i++) {
                     Double lat = coors_near_me.get(i).lat;
                     Double lon = coors_near_me.get(i).lon;
-                    StringBuilder stringBuilder = new StringBuilder();
-
                     String[] pos1 = (lat + "").split("\\.");
-                    //Log.d("MainActivityCrash ","lat "+lat+" lon "+lon + " pos1 " + pos1.length);
                     String[] pos2 = (lon + "").split("\\.");
                     String testKey = pos1[0] + "!" + pos1[1] + "*" + pos2[0] + "!" + pos2[1];
-                    //Log.d("testKey " + i, testKey);
                     if (dataSnapshot.child("Threads").child(testKey).exists()) {
-                        //Log.d("testKey", "Found Thread! " + i);
-                        SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-                        editor.putString("threadCode", testKey);
-                        editor.apply();
-                        String androidId = Settings.Secure.getString(getContentResolver(),
-                                Settings.Secure.ANDROID_ID);
-                        if(!dataSnapshot.child("Anons").child(androidId).exists()){
-                            HashMap map = new HashMap();
-                            map.put("threadCode",threadCode);
-                            String threadName = dataSnapshot.child("Threads").child(threadCode).child("threadTtitle").getValue(String.class);
-                            map.put("threadName",threadName);
-                            map.put("timeStamp",ThreadFinder.getTimeStamp());
-                            threadRef.child("Anons").child(androidId).child(0+"").updateChildren(map);
-                        }
-                        else{
-                            for(i = 0; i < ThreadFinder.MAX_SETTINGS_THREAD; i++){
-                                if(!dataSnapshot.child("Anons").child(androidId).child(i+"").exists()){
-                                    HashMap map = new HashMap();
-                                    map.put("threadCode",threadCode);
-                                    String threadName = dataSnapshot.child("Threads").child(threadCode).child("threadTtitle").getValue(String.class);
-                                    map.put("threadName",threadName);
-                                    map.put("timeStamp",ThreadFinder.getTimeStamp());
-                                    threadRef.child("Anons").child(androidId).child(i+"").updateChildren(map);
-                                    break;
-                                }
-                            }
-                        }
-                        Intent intent = new Intent(MainActivity.this, ThreadActivity.class);
-                        startActivity(intent);
-                        isFound = true;
-                        break;
+                        startThread(i,testKey,dataSnapshot);
+                        i = coors_near_me.size()+1;
                     }
-
                 }
                 if (!isFound) {
-                    Double lat = 35.307093;
-                    Double lon = -80.735164;
-                    String[] pos1 = (lat + "").split("\\.");
-                   // Log.d("MainActivityCrash ", "lat " + lat + " lon " + lon + " pos1 " + pos1.length);
-                    String[] pos2 = (lon + "").split("\\.");
-                    String pureKey = pos1[0] + "!" + pos1[1] + "*" + pos2[0] + "!" + pos2[1];
-                    SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-                    editor.putString("threadCode", pureKey);
-                    editor.apply();
-                    Intent intent = new Intent(MainActivity.this, CreateThread.class);
-                     startActivity(intent);
-                    Log.d("should CreateThread", "SS");
+                    createThread();
                 }
-
 
             }
 
@@ -188,6 +143,53 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
+    private void startThread(int i, String testKey, DataSnapshot dataSnapshot){
+        Log.d("MainActivity "," Found valid testKey");
+        SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+        editor.putString("threadCode", testKey);
+        editor.apply();
+        String androidId = Settings.Secure.getString(getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        if(!dataSnapshot.child("Anons").child(androidId).exists()){
+            HashMap map = new HashMap();
+            map.put("threadCode",testKey);
+            String threadName = dataSnapshot.child("Threads").child(testKey).child("threadTitle").getValue(String.class);
+            map.put("threadName",threadName);
+            map.put("timeStamp",ThreadFinder.getTimeStamp());
+            threadRef.child("Anons").child(androidId).child(0+"").updateChildren(map);
+        }
+        else{
+            for(int x = 0; x < ThreadFinder.MAX_SETTINGS_THREAD; x++){
+                if(!dataSnapshot.child("Anons").child(androidId).child(x+"").exists()){
+                    HashMap map = new HashMap();
+                    map.put("threadCode",testKey);
+                    String threadName = dataSnapshot.child("Threads").child(testKey).child("threadTitle").getValue(String.class);
+                    map.put("threadName",threadName);
+                    map.put("timeStamp",ThreadFinder.getTimeStamp());
+                    threadRef.child("Anons").child(androidId).child(x+"").updateChildren(map);
+                    x = ThreadFinder.MAX_SETTINGS_THREAD+1;
+                }
+            }
+        }
+        Intent intent = new Intent(MainActivity.this, ThreadActivity.class);
+        startActivity(intent);
+        i = coors_near_me.size()+1;
+        isFound = true;
+    }
+    private void createThread(){
+        Double lat = 35.307093;
+        Double lon = -80.735164;
+        String[] pos1 = (lat + "").split("\\.");
+        // Log.d("MainActivityCrash ", "lat " + lat + " lon " + lon + " pos1 " + pos1.length);
+        String[] pos2 = (lon + "").split("\\.");
+        String pureKey = pos1[0] + "!" + pos1[1] + "*" + pos2[0] + "!" + pos2[1];
+        SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+        editor.putString("threadCode", pureKey);
+        editor.apply();
+        Intent intent = new Intent(MainActivity.this, CreateThread.class);
+        startActivity(intent);
+        Log.d("should CreateThread", "SS");
+    }
     private void getLocationPermission() {
     /*
      * Request location permission, so that we can get the location of the
