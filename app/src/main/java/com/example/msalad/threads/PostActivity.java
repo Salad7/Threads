@@ -25,7 +25,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +60,9 @@ public class PostActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
+        FirebaseApp.initializeApp(this);
+        database = FirebaseDatabase.getInstance();
+        threadRef = database.getReference();
         messagesList = findViewById(R.id.messages_list);
         title = findViewById(R.id.post_title);
         replies = findViewById(R.id.post_replies);
@@ -79,6 +84,7 @@ public class PostActivity extends AppCompatActivity {
             }else{
                 upvoteCount.setText(0+"");
             }
+            threadCode = getIntent().getStringExtra("threadCode");
         }
 
         et_reply = findViewById(R.id.reply_field);
@@ -88,9 +94,36 @@ public class PostActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(et_reply.getText().toString().length() > 0){
                     DatabaseReference newMessagePath = threadRef.child("Threads").child(threadCode).child("topics").child(topicPostion+"").child("messages").child(messagePosition+"");
+                Message message = new Message();
+                    String androidId = Settings.Secure.getString(PostActivity.this.getContentResolver(),
+                            Settings.Secure.ANDROID_ID);
+                    message.setMsg(et_reply.getText().toString());
+                    message.setHostUID(androidId);
+                    message.setReplies(0);
+                    Date d = new Date();
+                    int time = (int) (d.getTime());
+                    message.setTimeStamp(time/1000);
+                    HashMap map = new HashMap();
+                    HashMap messageMap = new HashMap();
+                    map.put(androidId,"blue");
+                    message.setAnonCode(map);
+                    message.setPosition(messagePosition);
+                    messageMap.put("UID",message.getAnonCode());
+                    messageMap.put("timeStamp",message.getTimeStamp());
+                    //messageMap.put("upvotes",message.getUpvotes())
+                    messageMap.put("replies",message.getReplies());
+                    messageMap.put("message",message.getMsg());
+                    messageMap.put("position",message.getPosition());
+                    HashMap mappy = new HashMap();
+                    mappy.put(androidId,"blue");
+                    newMessagePath.updateChildren(messageMap);
                 }
             }
         });
+
+        loadPosts();
+        MessageAdapter messageAdapter = new MessageAdapter(this,R.layout.custom_message,messages);
+        messageAdapter.notifyDataSetChanged();
 
     }
 
@@ -118,8 +151,8 @@ public class PostActivity extends AppCompatActivity {
                                     }
                                 message.setMsg(specificMessagesPath.child("message").getValue(String.class));
                                 message.setPosition(i);
-                                message.setTimeStamp(specificMessagesPath.child("message").getValue(Integer.class));
-                                message.setAnonCode((Map) specificMessagesPath.child("message").getValue());
+                                message.setTimeStamp(specificMessagesPath.child("timeStamp").getValue(Integer.class));
+                                message.setAnonCode((Map) specificMessagesPath.child("anonCode").getValue());
                                 message.setReplies(specificMessagesPath.child("replies").getValue(Integer.class));
                                 message.setUpvotes(specificMessagesPath.child("upvotes").getValue(Integer.class));
                                 messages.add(message);
@@ -156,17 +189,15 @@ public class PostActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseApp.initializeApp(this);
-        database = FirebaseDatabase.getInstance();
-        threadRef = database.getReference();
+
     }
 
 
     public class MessageAdapter extends ArrayAdapter<Message> {
         Context c;
         int res;
-        List<Message> messages;
-        public MessageAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<Message> objects) {
+        ArrayList<Message> messages;
+        public MessageAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull ArrayList<Message> objects) {
             super(context, resource, objects);
             c = context;
             res = resource;

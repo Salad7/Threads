@@ -175,7 +175,7 @@ public class LocalFragment extends Fragment {
                                 topic.setParent(specificThreadPath.child("parent").getValue(String.class));
                                 topic.setReplies(specificThreadPath.child("replies").getValue(Integer.class));
                                     if(specificThreadPath.child("messages").exists()){
-                                        topic.setMessages(specificThreadPath.child("messages").getValue(ArrayList.class));
+                                        topic.setMessages((ArrayList) specificThreadPath.child("messages").getValue());
                                     }
                                     //topic.setUpvoters(locUpvoters);
                                     //locUpvoters.clear();
@@ -293,7 +293,13 @@ public class LocalFragment extends Fragment {
                 upvote.setText(0+"");
 
             }
-            reply.setText(topics.get(position).getReplies()+" Replies");
+            if(topics.get(position).getMessages() != null) {
+                reply.setText(topics.get(position).getMessages().size() + " Replies");
+            }
+            else{
+                reply.setText("0 Replies");
+
+            }
             message.setText(topics.get(position).getTopicTitle());
             elapsed.setText(ThreadFinder.getElapsedTime(topics.get(position).getTimeStamp()));
 
@@ -337,6 +343,7 @@ public class LocalFragment extends Fragment {
                     Intent intent = new Intent(getActivity(),PostActivity.class);
                     intent.putExtra("post",p);
                     intent.putExtra("tt",tt);
+                    intent.putExtra("threadCode",threadCode);
                     startActivity(intent);
                 }
             });
