@@ -33,6 +33,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -126,32 +127,34 @@ public class LocalFragment extends Fragment {
                     DataSnapshot threadPath =  dataSnapshot.child("Threads").child(threadCode);
                     threadTitle = threadPath.child("threadTitle").getValue(String.class);
                     threadTitleTV.setText(threadTitle);
+                    getActivity().setTitle(threadTitle);
                     ArrayList<String> locUpvoters = new ArrayList<String>();
                     if(threadPath.child("topics").exists()){
                         DataSnapshot topicPath = threadPath.child("topics");
                         for(int i = 0; i < 10; i++){
                             int totalTopics = (int) topicPath.getChildrenCount();
                             int topicsFound = 0;
-                            if(topicPath.child("upvoters").exists()){
-                                locUpvoters = topicPath.child("upvoters").getValue(ArrayList.class);
-                            }
-                            Log.d("LocalFragment",totalTopics+" TopicPath"+topicPath.toString());
+//                            if(topicPath.child(i+"").child("upvoters").exists()){
+//                                locUpvoters = (ArrayList) topicPath.child(i+"").child("upvoters").getValue();
+//                            }
+                            //Log.d("LocalFragment",totalTopics+" TopicPath"+topicPath.toString());
                             if(topicPath.child(i+"").exists()){
                                 DataSnapshot specificThreadPath = topicPath.child(i+"");
                                 Topics topic = new Topics();
                                 if(specificThreadPath.child("topicTitle").exists() && specificThreadPath.child("timeStamp").exists()){
+                                topic.setTopicTitle(specificThreadPath.child("topicTitle").getValue(String.class));
                                 topic.setAnonCode((Map) specificThreadPath.child("anonCode").getValue());
                                 topic.setTimeStamp(specificThreadPath.child("timeStamp").getValue(Integer.class));
-                                topic.setTopicTitle(specificThreadPath.child("threadTitle").getValue(String.class));
                                 topic.setHostUID(specificThreadPath.child("UID").getValue(String.class));
                                 topic.setPosition(i);
+                                topic.setUpvoters((ArrayList) specificThreadPath.child("upvoters").getValue());
                                 topic.setParent(specificThreadPath.child("parent").getValue(String.class));
                                 topic.setReplies(specificThreadPath.child("replies").getValue(Integer.class));
                                     if(specificThreadPath.child("messages").exists()){
                                         topic.setMessages(specificThreadPath.child("messages").getValue(ArrayList.class));
                                     }
-                                    topic.setUpvoters(locUpvoters);
-                                    locUpvoters.clear();
+                                    //topic.setUpvoters(locUpvoters);
+                                    //locUpvoters.clear();
                                     topics.add(topic);
                                     topicsFound+=1;
                                 }
@@ -250,32 +253,41 @@ public class LocalFragment extends Fragment {
             LayoutInflater inflater = (LayoutInflater) c
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(res,parent,false);
-            TextView upvote = (TextView) convertView.findViewById(R.id.upvote_txt);
+            final TextView upvote = (TextView) convertView.findViewById(R.id.upvote_txt);
             TextView reply = (TextView) convertView.findViewById(R.id.reply_txt);
             TextView message = (TextView) convertView.findViewById(R.id.message_txt);
             TextView elapsed = (TextView) convertView.findViewById(R.id.elapsedTimeTxt);
             Button upvoteBtn = (Button) convertView.findViewById(R.id.upvoteBtn);
 
             //ImageView cancel = (ImageView) convertView.findViewById(R.id.cancel_iv);
-            upvote.setText(topics.get(position).getUpvoters().size()+"");
-            reply.setText(topics.get(position).getReplies()+" Replies");
-            if(topics.get(0).getMessages() != null) {
-                if(topics.get(0).getMessages().get(0) != null) {
-                    message.setText(topics.get(0).getMessages().get(0).getMsg());
-                }
+//            Log.d("topics size",topics.get(position).upvoters.size()+"");
+            if(topics.get(position).getUpvoters() != null) {
+                upvote.setText(topics.get(position).getUpvoters().size() + "");
+            }else{
+                upvote.setText(0+"");
+
             }
-            elapsed.setText(topics.get(0).getTimeStamp()+"");
+            reply.setText(topics.get(position).getReplies()+" Replies");
+            message.setText(topics.get(position).getTopicTitle());
+            elapsed.setText(topics.get(position).getTimeStamp()+"");
 
             upvoteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String androidId = Settings.Secure.getString(getActivity().getContentResolver(),
                             Settings.Secure.ANDROID_ID);
-                    if(!topics.get(position).getUpvoters().contains(androidId)){
+                    if(topics.get(position).getUpvoters() == null){
+                        HashMap map = new HashMap<String,ArrayList<String>>();
+                        ArrayList<String> upvoters = new ArrayList<String>();
+                        upvoters.add(androidId);
+                        map.put("upvoters",upvoters);
+                        threadRef.child("Threads").child(threadCode).child("topics").child(topics.get(position).getPosition()+"").updateChildren(map);
+                    }
+                    else if(!topics.get(position).getUpvoters().contains(androidId)){
                         topics.get(position).getUpvoters().add(androidId);
                         HashMap map = new HashMap<String,ArrayList<String>>();
-                        map.put("upvoters",topics);
-                        threadRef.updateChildren(map);
+                        map.put("upvoters",topics.get(position).getUpvoters());
+                        threadRef.child("Threads").child(threadCode).child("topics").child(topics.get(position).getPosition()+"").updateChildren(map);
                         //Update firebase here
                     }
                 }

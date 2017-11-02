@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class Topics {
 
-    int position,upvotes,replies, timeStamp;
+    int position,replies, timeStamp;
     String topicTitle,parent,hostUID;
     Map anonCode = new HashMap<String,String>();
     ArrayList<String> upvoters;
@@ -27,14 +27,6 @@ public class Topics {
 
     public void setPosition(int position) {
         this.position = position;
-    }
-
-    public int getUpvotes() {
-        return upvotes;
-    }
-
-    public void setUpvotes(int upvotes) {
-        this.upvotes = upvotes;
     }
 
     public int getReplies() {
