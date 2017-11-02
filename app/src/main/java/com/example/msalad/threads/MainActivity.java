@@ -35,6 +35,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -74,6 +76,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FirebaseApp.initializeApp(this);
+        Date d = new Date();
+        //Calendar c
+        Log.d("time in millis",d.getTime()/1000+"");
       //  SupportMapFragment mapFragment = (SupportMapFragment) findFragmentById(R.id.map2);
         //if (mapFragment != null) {
         //mapFragment.getMapAsync(this);

@@ -37,6 +37,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -151,7 +153,6 @@ public class LocalFragment extends Fragment {
                     threadTitle = threadPath.child("threadTitle").getValue(String.class);
                     threadTitleTV.setText(threadTitle);
                     getActivity().setTitle(threadTitle);
-                    ArrayList<String> locUpvoters = new ArrayList<String>();
                     if(threadPath.child("topics").exists()){
                         DataSnapshot topicPath = threadPath.child("topics");
                         for(int i = 0; i < 10; i++){
@@ -236,8 +237,10 @@ public class LocalFragment extends Fragment {
         topicsMap.put("replies",0);
         topicsMap.put("upvotes",0);
         topicsMap.put("topicTitle",title);
-        int time = (int) (System.currentTimeMillis());
-        topicsMap.put("timeStamp",time);
+        Date d = new Date();
+        int time = (int) (d.getTime());
+        Log.d("LocalFragment",time/1000+"");
+        topicsMap.put("timeStamp",time/1000);
         ArrayList<String> anonUsers = new ArrayList<>();
         anonUsers.add(androidId);
         threadUsers.put("UIDs",anonUsers);
@@ -292,7 +295,7 @@ public class LocalFragment extends Fragment {
             }
             reply.setText(topics.get(position).getReplies()+" Replies");
             message.setText(topics.get(position).getTopicTitle());
-            elapsed.setText(topics.get(position).getTimeStamp()+"");
+            elapsed.setText(ThreadFinder.getElapsedTime(topics.get(position).getTimeStamp()));
 
             upvoteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override

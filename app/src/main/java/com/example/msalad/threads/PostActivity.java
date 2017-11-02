@@ -48,7 +48,11 @@ public class PostActivity extends AppCompatActivity {
             replies.setText(incomingPost.getReplies()+" Replies");
             timestamp.setText(incomingPost.getTimeStamp()+"");
             message.setText(incomingPost.getTopicTitle());
-            upvoteCount.setText(incomingPost.getUpvoters().size()+"");
+            if(incomingPost.getUpvoters() != null) {
+                upvoteCount.setText(incomingPost.getUpvoters().size() + "");
+            }else{
+                upvoteCount.setText(0+"");
+            }
         }
 
     }

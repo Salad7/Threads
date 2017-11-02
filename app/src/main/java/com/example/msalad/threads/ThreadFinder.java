@@ -8,6 +8,8 @@ package com.example.msalad.threads;
   //      Anonymous group messaging app
 
         import java.util.ArrayList;
+        import java.util.Calendar;
+        import java.util.Date;
         import java.util.HashMap;
         import java.util.Map;
 
@@ -59,7 +61,83 @@ public class ThreadFinder {
         return (double)Math.round(v * 1000000d) / 1000000d;
     }
 
+    public static int getLastDayInCalender(int month){
+        if(month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12){
+            return 31;
+        }
+        if(month == 2){
+            return 28;
+        }
+        return 30;
+    }
 
+
+public static String getElapsedTime(int userTS){
+    Date dt = new Date();
+    //let calendar = new Calendar();
+    int secondsCap = 60;
+    int minutesCap = 3600;
+    int hoursCap = 216000;
+    int daysCap = 51840000;
+    int month = dt.getMonth();
+    int monthsCamp = getLastDayInCalender(month);
+    int timestamp = (int) dt.getTime()/1000;
+    int difference = timestamp - userTS;
+    int getSeconds = difference;
+    //Limit seconds in a minute
+    if(getSeconds < 60){
+        if(getSeconds == 1){
+            return getSeconds+" second ago";
+        }
+        return getSeconds+" seconds ago";
+    }
+    //Limit seconds in an hour
+    else if (getSeconds > 60 && getSeconds < 3600){
+        if(getSeconds/60 == 1){
+            return getSeconds/60+" minute ago";
+
+        }
+        return getSeconds/60+" minutes ago";
+
+    }
+    //Limit seconds in a day
+    else if(getSeconds > 3600 && getSeconds < 86400){
+        if(getSeconds/3600 == 1){
+            return getSeconds/3600+" hour ago";
+
+        }
+        return getSeconds/3600+" hours ago";
+
+    }
+    //limit seconds in a week
+    else if(getSeconds > 86400 && getSeconds < 604800){
+        if(getSeconds/86400 == 1){
+            return getSeconds/86400+" day ago";
+        }
+        return getSeconds/86400+" days ago";
+    }
+    //limit seconds in a month
+    else if(getSeconds > 604800 && getSeconds < monthsCamp*864000){
+        if(getSeconds/604800 == 1){
+            return 1+" week ago";
+
+        }else{
+            return getSeconds/604800+" weeks ago";
+
+        }
+    }
+    //limit seconds in a year
+    else if(getSeconds > monthsCamp*864000 && getSeconds < monthsCamp*864000*12){
+        if(getSeconds/(monthsCamp*864000) == 1){
+            return getSeconds/(monthsCamp*864000)+" month ago";
+        }
+        return getSeconds/(monthsCamp*864000)+" months ago";
+    }
+
+    else{
+        return " over a year ago";
+    }
+}
 
 }
 

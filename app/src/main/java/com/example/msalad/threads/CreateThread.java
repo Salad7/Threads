@@ -85,9 +85,9 @@ public class CreateThread extends AppCompatActivity {
         ArrayList<String> u = new ArrayList<>();
         String androidId = Settings.Secure.getString(getContentResolver(),
                 Settings.Secure.ANDROID_ID);
-        int time = (int) (System.currentTimeMillis());
-        Timestamp tsTemp = new Timestamp(time);
-        String ts =  tsTemp.toString();
+        int time = (int) (System.currentTimeMillis())/1000;
+        //Timestamp tsTemp = new Timestamp(time);
+        //String ts =  tsTemp.toString();
         u.add(androidId);
         t.setAnons(u);
         t.setThreadTitle(threadTitle);
