@@ -140,6 +140,7 @@ public class LocalFragment extends Fragment {
 
             }
         });
+        localFragmentItemAdapter.setNotifyOnChange(true);
         return v;
     }
 
@@ -193,9 +194,10 @@ public class LocalFragment extends Fragment {
                     }
 
                 }
-                localFragmentItemAdapter.setNotifyOnChange(true);
-                localFragmentItemAdapter.notifyDataSetChanged();
+
                 Log.d("topics count ", topics.size()+"");
+                localFragmentItemAdapter.notifyDataSetChanged();
+
 
             }
 

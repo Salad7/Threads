@@ -110,10 +110,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    public void threadFound(){
-
-    }
-
     private void searchIfThreadExistsInFirebase(){
 
         threadRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -128,6 +124,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                     if (dataSnapshot.child("Threads").child(testKey).exists()) {
                         startThread(i,testKey,dataSnapshot);
                         i = coors_near_me.size()+1;
+                        isFound = true;
                     }
                 }
                 if (!isFound) {
@@ -159,22 +156,37 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             threadRef.child("Anons").child(androidId).child(0+"").updateChildren(map);
         }
         else{
+            int openAnon = -1;
             for(int x = 0; x < ThreadFinder.MAX_SETTINGS_THREAD; x++){
-                if(!dataSnapshot.child("Anons").child(androidId).child(x+"").exists()){
-                    HashMap map = new HashMap();
-                    map.put("threadCode",testKey);
-                    String threadName = dataSnapshot.child("Threads").child(testKey).child("threadTitle").getValue(String.class);
-                    map.put("threadName",threadName);
-                    map.put("timeStamp",ThreadFinder.getTimeStamp());
-                    threadRef.child("Anons").child(androidId).child(x+"").updateChildren(map);
-                    x = ThreadFinder.MAX_SETTINGS_THREAD+1;
+                //If the thread exists
+                //Check if that threads code matches testKey
+                //If we find a match, dont add and start.
+                //If we get to the end and dont find match, add the threadCode and continue
+                if(dataSnapshot.child("Anons").child(androidId).child(x+"").exists()){
+                    if(dataSnapshot.child("Anons").child(androidId).child(x+"").child("threadCode").getValue(String.class).equals(testKey)){
+                        Intent intent = new Intent(MainActivity.this, ThreadActivity.class);
+                        startActivity(intent);
+                        x = coors_near_me.size()+1;
+                        isFound = true;
+                    }
+
+                }
+                if(openAnon < 0){
+                    openAnon = i;
                 }
             }
+            HashMap map = new HashMap();
+            map.put("threadCode",testKey);
+            String threadName = dataSnapshot.child("Threads").child(testKey).child("threadTitle").getValue(String.class);
+            map.put("threadName",threadName);
+            map.put("timeStamp",ThreadFinder.getTimeStamp());
+            threadRef.child("Anons").child(androidId).child(openAnon+"").updateChildren(map);
+            Intent intent = new Intent(MainActivity.this, ThreadActivity.class);
+            startActivity(intent);
+            isFound = true;
+
         }
-        Intent intent = new Intent(MainActivity.this, ThreadActivity.class);
-        startActivity(intent);
-        i = coors_near_me.size()+1;
-        isFound = true;
+
     }
     private void createThread(){
         Double lat = 35.307093;

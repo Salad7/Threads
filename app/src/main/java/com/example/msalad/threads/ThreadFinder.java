@@ -20,6 +20,7 @@ public class ThreadFinder {
     //Distance away from center to calculate
     final static double lonDistFromCenter = 0.000100;
     final static int MAX_SETTINGS_THREAD = 100;
+    final static int MAX_MESSAGES = 10000;
 
    // public static void main(String[] args){
      //   double lat = 35.281412;

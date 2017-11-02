@@ -1,6 +1,7 @@
 package com.example.msalad.threads;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.IdRes;
@@ -48,6 +49,7 @@ public class PostActivity extends AppCompatActivity {
     TextView message;
     TextView upvoteCount;
     Button upvoteBtn;
+    ImageButton backBtn;
     Post incomingPost;
     String threadCode;
     EditText et_reply;
@@ -71,6 +73,14 @@ public class PostActivity extends AppCompatActivity {
         message = findViewById(R.id.post_msg);
         upvoteBtn = findViewById(R.id.upvoteBtn);
         upvoteCount = findViewById(R.id.post_upvotes);
+        backBtn = findViewById(R.id.backBtn);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(PostActivity.this,ThreadActivity.class);
+                startActivity(i);
+            }
+        });
         send = findViewById(R.id.send);
         messages = new ArrayList<>();
         if(getIntent().getExtras() != null){
@@ -144,7 +154,7 @@ public class PostActivity extends AppCompatActivity {
                             DataSnapshot messagesPath = topicPath.child(topicPostion+"").child("messages");
                             int totalMessages = (int) messagesPath.getChildrenCount();
                             int messagesFound = 0;
-                            for(int i = 0; i < 10000; i++){
+                            for(int i = 0; i < ThreadFinder.MAX_MESSAGES; i++){
                                 if(messagesPath.child(i+"").exists() && totalMessages >= messagesFound){
                                     Log.d("PostActivity"," Found message!");
                                 DataSnapshot specificMessagesPath = messagesPath.child(i+"");

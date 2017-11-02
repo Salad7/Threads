@@ -132,7 +132,7 @@
         android:id="@+id/back_btn">
 
         <ImageButton
-            android:id="@+id/imageButton3"
+            android:id="@+id/backBtn"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_gravity="center"
