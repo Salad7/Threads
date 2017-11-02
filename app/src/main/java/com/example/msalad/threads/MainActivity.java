@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -37,6 +38,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -116,7 +118,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         threadRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
                 for(int i = 0; i < coors_near_me.size(); i++) {
                     Double lat = coors_near_me.get(i).lat;
                     Double lon = coors_near_me.get(i).lon;
@@ -132,6 +133,29 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                         SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
                         editor.putString("threadCode", testKey);
                         editor.apply();
+                        String androidId = Settings.Secure.getString(getContentResolver(),
+                                Settings.Secure.ANDROID_ID);
+                        if(!dataSnapshot.child("Anons").child(androidId).exists()){
+                            HashMap map = new HashMap();
+                            map.put("threadCode",threadCode);
+                            String threadName = dataSnapshot.child("Threads").child(threadCode).child("threadTtitle").getValue(String.class);
+                            map.put("threadName",threadName);
+                            map.put("timeStamp",ThreadFinder.getTimeStamp());
+                            threadRef.child("Anons").child(androidId).child(0+"").updateChildren(map);
+                        }
+                        else{
+                            for(i = 0; i < ThreadFinder.MAX_SETTINGS_THREAD; i++){
+                                if(!dataSnapshot.child("Anons").child(androidId).child(i+"").exists()){
+                                    HashMap map = new HashMap();
+                                    map.put("threadCode",threadCode);
+                                    String threadName = dataSnapshot.child("Threads").child(threadCode).child("threadTtitle").getValue(String.class);
+                                    map.put("threadName",threadName);
+                                    map.put("timeStamp",ThreadFinder.getTimeStamp());
+                                    threadRef.child("Anons").child(androidId).child(i+"").updateChildren(map);
+                                    break;
+                                }
+                            }
+                        }
                         Intent intent = new Intent(MainActivity.this, ThreadActivity.class);
                         startActivity(intent);
                         isFound = true;

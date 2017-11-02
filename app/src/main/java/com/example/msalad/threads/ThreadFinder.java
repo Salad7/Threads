@@ -19,6 +19,7 @@ public class ThreadFinder {
     final static double latDistFromCenter = 0.000100;
     //Distance away from center to calculate
     final static double lonDistFromCenter = 0.000100;
+    final static int MAX_SETTINGS_THREAD = 100;
 
    // public static void main(String[] args){
      //   double lat = 35.281412;
@@ -137,6 +138,12 @@ public static String getElapsedTime(int userTS){
     else{
         return " over a year ago";
     }
+}
+
+public static int getTimeStamp(){
+    Date d = new Date();
+    int time = (int) (d.getTime());
+    return time/1000;
 }
 
 }
