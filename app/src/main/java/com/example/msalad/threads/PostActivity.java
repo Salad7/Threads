@@ -159,6 +159,7 @@ public class PostActivity extends AppCompatActivity {
                     newMessagePath.updateChildren(messageMap);
                     dismissKeyboard(PostActivity.this);
                     et_reply.setText("");
+
                 }
             }
         });
@@ -280,7 +281,12 @@ public class PostActivity extends AppCompatActivity {
             msg = convertView.findViewById(R.id.post_reply);
             count = convertView.findViewById(R.id.post_upvote_count);
             upvoteBtn = convertView.findViewById(R.id.upvote_img);
-            label.setText(position+"");
+            if(incomingPost.getHostUID().equals(messages.get(position).getHostUID())) {
+                label.setText("OP");
+            }
+            else{
+
+            }
             msg.setText(messages.get(position).getMsg());
             if(messages.get(position).getUpvoters() == null){
                 count.setText(0+"");
@@ -311,6 +317,8 @@ public class PostActivity extends AppCompatActivity {
                         threadRef.child("Threads").child(threadCode).child("topics").child(topicPostion+"").child("messages").child(messages.get(position).getPosition()+"")
                                 .updateChildren(map);
                         count.setText(androids.size());
+                        threadRef.child("Pushes").child(androidId).child("ha").setValue("push");
+                        Log.d("PostActivty", threadRef.child("Pushes").child(androidId).child("ha").getKey());
                     }
 //                    else if(!messages.get(position).getUpvoters().contains(androidId)){
 //
