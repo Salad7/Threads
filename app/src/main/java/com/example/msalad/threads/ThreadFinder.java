@@ -59,7 +59,7 @@ public class ThreadFinder{
             la = resetVal;
         }
         mainActivity.coors_near_me = ll;
-        mainActivity.searchIfThreadExistsInFirebase();
+        mainActivity.new ThreadAsyncTask().execute();
         return ll;
     }
 

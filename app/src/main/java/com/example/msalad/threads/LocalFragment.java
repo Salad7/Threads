@@ -155,46 +155,48 @@ public class LocalFragment extends Fragment {
                     DataSnapshot threadPath =  dataSnapshot.child("Threads").child(threadCode);
                     threadTitle = threadPath.child("threadTitle").getValue(String.class);
                     threadTitleTV.setText(threadTitle);
-                    getActivity().setTitle(threadTitle);
-                    if(threadPath.child("topics").exists()){
-                        DataSnapshot topicPath = threadPath.child("topics");
-                        for(int i = 0; i < ThreadFinder.MAX_TOPICS; i++){
-                            int totalTopics = (int) topicPath.getChildrenCount();
-                            int topicsFound = 0;
+                    try {
+                        getActivity().setTitle(threadTitle);
+                        if (threadPath.child("topics").exists()) {
+                            DataSnapshot topicPath = threadPath.child("topics");
+                            for (int i = 0; i < ThreadFinder.MAX_TOPICS; i++) {
+                                int totalTopics = (int) topicPath.getChildrenCount();
+                                int topicsFound = 0;
 //                            if(topicPath.child(i+"").child("upvoters").exists()){
 //                                locUpvoters = (ArrayList) topicPath.child(i+"").child("upvoters").getValue();
 //                            }
-                            //Log.d("LocalFragment",totalTopics+" TopicPath"+topicPath.toString());
-                            if(topicPath.child(i+"").exists()){
-                                DataSnapshot specificThreadPath = topicPath.child(i+"");
-                                Topics topic = new Topics();
-                                if(specificThreadPath.child("topicTitle").exists() && specificThreadPath.child("timeStamp").exists()){
-                                topic.setTopicTitle(specificThreadPath.child("topicTitle").getValue(String.class));
-                                topic.setAnonCode((Map) specificThreadPath.child("anonCode").getValue());
-                                topic.setTimeStamp(specificThreadPath.child("timeStamp").getValue(Integer.class));
-                                topic.setHostUID(specificThreadPath.child("UID").getValue(String.class));
-                                topic.setPosition(i);
-                                topic.setUpvoters((ArrayList) specificThreadPath.child("upvoters").getValue());
-                                topic.setParent(specificThreadPath.child("parent").getValue(String.class));
-                                topic.setReplies(specificThreadPath.child("replies").getValue(Integer.class));
-                                    if(specificThreadPath.child("messages").exists()){
-                                        topic.setMessages((ArrayList) specificThreadPath.child("messages").getValue());
+                                //Log.d("LocalFragment",totalTopics+" TopicPath"+topicPath.toString());
+                                if (topicPath.child(i + "").exists()) {
+                                    DataSnapshot specificThreadPath = topicPath.child(i + "");
+                                    Topics topic = new Topics();
+                                    if (specificThreadPath.child("topicTitle").exists() && specificThreadPath.child("timeStamp").exists()) {
+                                        topic.setTopicTitle(specificThreadPath.child("topicTitle").getValue(String.class));
+                                        topic.setAnonCode((Map) specificThreadPath.child("anonCode").getValue());
+                                        topic.setTimeStamp(specificThreadPath.child("timeStamp").getValue(Integer.class));
+                                        topic.setHostUID(specificThreadPath.child("UID").getValue(String.class));
+                                        topic.setPosition(i);
+                                        topic.setUpvoters((ArrayList) specificThreadPath.child("upvoters").getValue());
+                                        topic.setParent(specificThreadPath.child("parent").getValue(String.class));
+                                        topic.setReplies(specificThreadPath.child("replies").getValue(Integer.class));
+                                        if (specificThreadPath.child("messages").exists()) {
+                                            topic.setMessages((ArrayList) specificThreadPath.child("messages").getValue());
+                                        }
+                                        //topic.setUpvoters(locUpvoters);
+                                        //locUpvoters.clear();
+                                        topics.add(topic);
+                                        topicsFound += 1;
                                     }
-                                    //topic.setUpvoters(locUpvoters);
-                                    //locUpvoters.clear();
-                                    topics.add(topic);
-                                    topicsFound+=1;
-                                }
-                            }
-                            else if(!topicPath.child(i+"").exists()){
-                                //if(i < openSpotInFirebase){
+                                } else if (!topicPath.child(i + "").exists()) {
+                                    //if(i < openSpotInFirebase){
                                     openSpotInFirebase = i;
-                                //}
+                                    //}
+                                }
+
                             }
-
                         }
-                    }
+                    }catch (NullPointerException e){
 
+                    }
                 }
 
                // Log.d("topics count ", topics.size()+"");

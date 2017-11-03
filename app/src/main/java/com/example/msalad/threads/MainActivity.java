@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -35,13 +37,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.victor.loading.newton.NewtonCradleLoading;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
-import is.arontibo.library.ElasticDownloadView;
 
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -74,7 +76,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
     private  FirebaseDatabase database;
-   public ElasticDownloadView mElasticDownloadView;
 
 
     @Override
@@ -82,8 +83,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FirebaseApp.initializeApp(this);
-        mElasticDownloadView = findViewById(R.id.elastic_download_view);
-        mElasticDownloadView.startIntro();
+        NewtonCradleLoading newtonCradleLoading; newtonCradleLoading = (NewtonCradleLoading)findViewById(R.id.newton_cradle_loading);
+        newtonCradleLoading.setLoadingColor(R.color.colorPrimary);
+        newtonCradleLoading.start();
+
         //Date d = new Date();
         //Calendar c
         //Log.d("time in millis",d.getTime()/1000+"");
@@ -114,38 +117,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    public void searchIfThreadExistsInFirebase(){
 
-        threadRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(int i = 0; i < coors_near_me.size(); i++) {
-                    Double lat = coors_near_me.get(i).lat;
-                    Double lon = coors_near_me.get(i).lon;
-                    String[] pos1 = (lat + "").split("\\.");
-                    String[] pos2 = (lon + "").split("\\.");
-                    String testKey = pos1[0] + "!" + pos1[1] + "*" + pos2[0] + "!" + pos2[1];
-                    mElasticDownloadView.setProgress(i/coors_near_me.size());
-                    if (dataSnapshot.child("Threads").child(testKey).exists()) {
-                        mElasticDownloadView.success();
-                        startThread(i,testKey,dataSnapshot);
-                        i = coors_near_me.size()+1;
-                        isFound = true;
-                    }
-                }
-                if (!isFound) {
-                    mElasticDownloadView.success();
-                    createThread();
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
 
     private void startThread(int i, String testKey, DataSnapshot dataSnapshot){
        // Log.d("MainActivity "," Found valid testKey");
@@ -345,5 +317,55 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
+    }
+
+
+    public class ThreadAsyncTask extends AsyncTask<Void,Void,Void>{
+
+
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            searchIfThreadExistsInFirebase();
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        public void searchIfThreadExistsInFirebase(){
+
+
+            threadRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    for(int i = 0; i < coors_near_me.size(); i++) {
+                        Double lat = coors_near_me.get(i).lat;
+                        Double lon = coors_near_me.get(i).lon;
+                        String[] pos1 = (lat + "").split("\\.");
+                        String[] pos2 = (lon + "").split("\\.");
+                        String testKey = pos1[0] + "!" + pos1[1] + "*" + pos2[0] + "!" + pos2[1];
+                        if (dataSnapshot.child("Threads").child(testKey).exists()) {
+                            startThread(i,testKey,dataSnapshot);
+                            i = coors_near_me.size()+1;
+                            isFound = true;
+                        }
+                    }
+                    if (!isFound) {
+                        createThread();
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
 }
