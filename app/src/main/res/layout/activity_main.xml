@@ -12,19 +12,14 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="69dp" />
-
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/mapView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/textView3"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="102dp" />
-
     <fragment
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:id="@+id/map11"
         android:name="com.google.android.gms.maps.SupportMapFragment"/>
+
+    <is.arontibo.library.ElasticDownloadView
+        android:id="@+id/elastic_download_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </RelativeLayout>

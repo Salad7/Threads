@@ -41,6 +41,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
+import is.arontibo.library.ElasticDownloadView;
+
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -72,6 +74,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
     private  FirebaseDatabase database;
+   public ElasticDownloadView mElasticDownloadView;
 
 
     @Override
@@ -79,6 +82,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FirebaseApp.initializeApp(this);
+        mElasticDownloadView = findViewById(R.id.elastic_download_view);
+        mElasticDownloadView.startIntro();
         //Date d = new Date();
         //Calendar c
         //Log.d("time in millis",d.getTime()/1000+"");
@@ -120,13 +125,16 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                     String[] pos1 = (lat + "").split("\\.");
                     String[] pos2 = (lon + "").split("\\.");
                     String testKey = pos1[0] + "!" + pos1[1] + "*" + pos2[0] + "!" + pos2[1];
+                    mElasticDownloadView.setProgress(i/coors_near_me.size());
                     if (dataSnapshot.child("Threads").child(testKey).exists()) {
+                        mElasticDownloadView.success();
                         startThread(i,testKey,dataSnapshot);
                         i = coors_near_me.size()+1;
                         isFound = true;
                     }
                 }
                 if (!isFound) {
+                    mElasticDownloadView.success();
                     createThread();
                 }
 
