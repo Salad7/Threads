@@ -103,6 +103,8 @@ public class CreateThread extends AppCompatActivity {
         //DatabaseReference threadTopicRoot = threadRef.child("Threads").child(threadCode).child("topics").child("0");
         //threadTopicRoot.updateChildren(map2);
        threadRoot.updateChildren(map);
+        Intent i = new Intent(CreateThread.this,MainActivity.class);
+        startActivity(i);
 
     }
 

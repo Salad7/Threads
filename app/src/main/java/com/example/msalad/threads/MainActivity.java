@@ -19,6 +19,7 @@ import com.google.android.gms.location.places.PlaceDetectionApi;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -59,7 +60,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean mLocationPermissionGranted;
     private DatabaseReference threadRef;
-    private ArrayList<LatLon> coors_near_me;
+    public ArrayList<LatLon> coors_near_me;
     private String threadCode;
     private String MY_PREFS_NAME = "MY_PREFS_NAME";
     // The geographical location where the device is currently located. That is, the last-known
@@ -78,12 +79,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FirebaseApp.initializeApp(this);
-        Date d = new Date();
+        //Date d = new Date();
         //Calendar c
         //Log.d("time in millis",d.getTime()/1000+"");
-      //  SupportMapFragment mapFragment = (SupportMapFragment) findFragmentById(R.id.map2);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map11);
         //if (mapFragment != null) {
-        //mapFragment.getMapAsync(this);
+        mapFragment.getMapAsync(this);
         // Construct a GeoDataClient.
         mGeoDataClient = Places.GeoDataApi;
         // Construct a PlaceDetectionClient.
@@ -97,9 +98,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         //for(int i = 0; i < 15; i)
         database = FirebaseDatabase.getInstance();
         threadRef = database.getReference();
-        coors_near_me =  ThreadFinder.runSimulationQuad2(35.307093-.000005,-80.735164-.000005);
         //printNearLocs();
-        searchIfThreadExistsInFirebase();
 
 
     }
@@ -110,7 +109,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    private void searchIfThreadExistsInFirebase(){
+    public void searchIfThreadExistsInFirebase(){
 
         threadRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -141,7 +140,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void startThread(int i, String testKey, DataSnapshot dataSnapshot){
-        Log.d("MainActivity "," Found valid testKey");
+       // Log.d("MainActivity "," Found valid testKey");
         SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
         editor.putString("threadCode", testKey);
         editor.apply();
@@ -189,8 +188,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
     private void createThread(){
-        Double lat = 35.307093;
-        Double lon = -80.735164;
+        Double lat = convertDouble(mLastKnownLocation.getLatitude());
+        Double lon =  convertDouble(mLastKnownLocation.getLongitude());
         String[] pos1 = (lat + "").split("\\.");
         // Log.d("MainActivityCrash ", "lat " + lat + " lon " + lon + " pos1 " + pos1.length);
         String[] pos2 = (lon + "").split("\\.");
@@ -200,7 +199,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         editor.apply();
         Intent intent = new Intent(MainActivity.this, CreateThread.class);
         startActivity(intent);
-        Log.d("should CreateThread", "SS");
+        //Log.d("should CreateThread", "SS");
     }
     private void getLocationPermission() {
     /*
@@ -283,7 +282,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                             //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastKnownLocation.,2.3), DEFAULT_ZOOM));
                             //mMap.getUiSettings().setMyLocationButtonEnabled(false);
                         }
-                        Toast.makeText(getApplicationContext(),mLastKnownLocation.getLongitude() + " " + mLastKnownLocation.getLatitude(),Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(),mLastKnownLocation.getLongitude() + " " + mLastKnownLocation.getLatitude(),Toast.LENGTH_SHORT).show();
+                        //Log.d("MainActivity ",mLastKnownLocation.getLatitude()+" "+mLastKnownLocation.getLongitude());
+                        coors_near_me =  ThreadFinder.runSimulationQuad2(convertDouble(mLastKnownLocation.getLatitude())-.000050,convertDouble(mLastKnownLocation.getLongitude())-.000050,MainActivity.this);
+                        //searchIfThreadExistsInFirebase();
+
+
                     }
                 });
 
@@ -291,7 +295,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         } catch(SecurityException e)  {
             Log.e("Exception: %s", e.getMessage());
         }
-
 
 
     }
@@ -308,7 +311,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
         // Add a marker in Sydney and move the camera
         //LatLng sydney = new LatLng(-34, 151);
         //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
@@ -317,6 +319,19 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         updateLocationUI();
         // Get the current location of the device and set the position of the map.
         getDeviceLocation();
-        Log.d("MapReady","MapReady");
+        //Log.d("MapReady","MapReady");
+    }
+
+
+    public Double convertDouble(Double l){
+        String la = l+"";
+        String la2 = "";
+        for(int i = 0; i < la.length()-1; i++){
+            la2+=la.charAt(i);
+        }
+        return Double.parseDouble(la2);
+
+
+
     }
 }

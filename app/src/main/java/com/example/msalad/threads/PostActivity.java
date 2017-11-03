@@ -50,7 +50,7 @@ public class PostActivity extends AppCompatActivity {
     TextView timestamp;
     TextView message;
     TextView upvoteCount;
-    Button upvoteBtn;
+    ImageButton upvoteBtn;
     ImageButton backBtn;
     Post incomingPost;
     String threadCode;
@@ -73,7 +73,7 @@ public class PostActivity extends AppCompatActivity {
         replies = findViewById(R.id.post_replies);
         timestamp = findViewById(R.id.post_timestamp);
         message = findViewById(R.id.post_msg);
-        upvoteBtn = findViewById(R.id.upvoteBtn);
+        upvoteBtn = findViewById(R.id.upvoteBtnPost);
         upvoteCount = findViewById(R.id.post_upvotes);
         backBtn = findViewById(R.id.backBtn);
         backBtn.setOnClickListener(new View.OnClickListener() {
@@ -102,6 +102,29 @@ public class PostActivity extends AppCompatActivity {
         }
 
         et_reply = findViewById(R.id.reply_field);
+        upvoteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String androidId = Settings.Secure.getString(PostActivity.this.getContentResolver(),
+                        Settings.Secure.ANDROID_ID);
+                if(incomingPost.getUpvoters() == null){
+                    ArrayList<String> alist = new ArrayList<String>();
+                    alist.add(androidId);
+                    HashMap map = new HashMap();
+                    map.put("upvoters",alist);
+                    threadRef.child("Threads").child(threadCode).child("topics").updateChildren(map);
+                    upvoteCount.setText(1+"");
+                }
+                else if(!incomingPost.getUpvoters().contains(androidId)){
+                    ArrayList<String> alist = incomingPost.getUpvoters();
+                    alist.add(androidId);
+                    HashMap map = new HashMap();
+                    map.put("upvoters",alist);
+                    threadRef.child("Threads").child(threadCode).child("topics").updateChildren(map);
+                    upvoteCount.setText(alist.size()+"");
+                }
+            }
+        });
 
 
         send.setOnClickListener(new View.OnClickListener() {
@@ -251,7 +274,7 @@ public class PostActivity extends AppCompatActivity {
             convertView = inflater.inflate(res,parent,false);
             TextView label;
             TextView msg;
-            TextView count;
+            final TextView count;
             ImageButton upvoteBtn;
             label = convertView.findViewById(R.id.posttitle);
             msg = convertView.findViewById(R.id.post_reply);
@@ -270,13 +293,24 @@ public class PostActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     String androidId = Settings.Secure.getString(PostActivity.this.getContentResolver(),
                             Settings.Secure.ANDROID_ID);
-                    if(messages.get(position).getUpvoters() == null || !messages.get(position).getUpvoters().contains(androidId)){
+                    if(messages.get(position).getUpvoters() == null){
                         ArrayList<String> androids = new ArrayList<String>();
                         androids.add(androidId);
                         HashMap map = new HashMap();
                         map.put("upvoters",androids);
                         threadRef.child("Threads").child(threadCode).child("topics").child(topicPostion+"").child("messages").child(messages.get(position).getPosition()+"")
                                 .updateChildren(map);
+                        count.setText(1+"");
+
+                    }
+                    else if(!messages.get(position).getUpvoters().contains(androidId)){
+                        ArrayList<String> androids = messages.get(position).getUpvoters();
+                        androids.add(androidId);
+                        HashMap map = new HashMap();
+                        map.put("upvoters",androids);
+                        threadRef.child("Threads").child(threadCode).child("topics").child(topicPostion+"").child("messages").child(messages.get(position).getPosition()+"")
+                                .updateChildren(map);
+                        count.setText(androids.size());
                     }
 //                    else if(!messages.get(position).getUpvoters().contains(androidId)){
 //

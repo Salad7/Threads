@@ -38,7 +38,7 @@
             android:id="@+id/linearLayout4">
 
             <ImageButton
-                android:id="@+id/imageButton"
+                android:id="@+id/upvoteBtnPost"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_gravity="center"
@@ -61,6 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="32dp"
+
             android:textSize="24dp"
             android:gravity="left"
             android:textColor="#000"

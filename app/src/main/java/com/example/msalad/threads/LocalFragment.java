@@ -195,7 +195,7 @@ public class LocalFragment extends Fragment {
 
                 }
 
-                Log.d("topics count ", topics.size()+"");
+               // Log.d("topics count ", topics.size()+"");
                 localFragmentItemAdapter.notifyDataSetChanged();
 
 
@@ -239,7 +239,7 @@ public class LocalFragment extends Fragment {
         topicsMap.put("replies",0);
         topicsMap.put("upvotes",0);
         topicsMap.put("topicTitle",title);
-        Log.d("LocalFragment",ThreadFinder.getTimeStamp()+"");
+        //Log.d("LocalFragment",ThreadFinder.getTimeStamp()+"");
         topicsMap.put("timeStamp",ThreadFinder.getTimeStamp());
         ArrayList<String> anonUsers = new ArrayList<>();
         anonUsers.add(androidId);

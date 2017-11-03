@@ -7,13 +7,14 @@ package com.example.msalad.threads;
 // Threads
   //      Anonymous group messaging app
 
+        import java.nio.channels.CompletionHandler;
         import java.util.ArrayList;
         import java.util.Calendar;
         import java.util.Date;
         import java.util.HashMap;
         import java.util.Map;
 
-public class ThreadFinder {
+public class ThreadFinder{
 
     //Distance away from center to calculate
     final static double latDistFromCenter = 0.000100;
@@ -42,14 +43,14 @@ public class ThreadFinder {
        // System.out.println(runSimulationQuad2(mnp(lat-0.000100),mnp(lon-0.000100)).size() + " Coordinates found!");
     //}
 
-    public static ArrayList<LatLon> runSimulationQuad2(double la, double lo){
+    public static ArrayList<LatLon> runSimulationQuad2(double la, double lo, MainActivity mainActivity){
         ArrayList<LatLon> ll = new ArrayList<>();
         double resetVal = la;
         System.out.println("Lat start " + la);
         System.out.println("Lon start " + lo);
-        for(double lonPos = 0; lonPos <= 10; lonPos+=1){
+        for(double lonPos = 0; lonPos <= 100; lonPos+=1){
             lo = mnp(lo+0.000001);
-            for(double latPos = 0; latPos <= 10; latPos+=1){
+            for(double latPos = 0; latPos <= 100; latPos+=1){
                 la = mnp(la+0.000001);
                 System.out.println(" Lat " + mnp(la) + " Lon " + mnp(lo));
                 ll.add(new LatLon(mnp(la),mnp(lo)));
@@ -57,6 +58,8 @@ public class ThreadFinder {
             }
             la = resetVal;
         }
+        mainActivity.coors_near_me = ll;
+        mainActivity.searchIfThreadExistsInFirebase();
         return ll;
     }
 
@@ -147,6 +150,7 @@ public static int getTimeStamp(){
     int time = (int) (d.getTime());
     return time/1000;
 }
+
 
 }
 
