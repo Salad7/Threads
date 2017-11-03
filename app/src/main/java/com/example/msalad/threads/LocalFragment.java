@@ -156,7 +156,7 @@ public class LocalFragment extends Fragment {
                     getActivity().setTitle(threadTitle);
                     if(threadPath.child("topics").exists()){
                         DataSnapshot topicPath = threadPath.child("topics");
-                        for(int i = 0; i < 10; i++){
+                        for(int i = 0; i < ThreadFinder.MAX_TOPICS; i++){
                             int totalTopics = (int) topicPath.getChildrenCount();
                             int topicsFound = 0;
 //                            if(topicPath.child(i+"").child("upvoters").exists()){

@@ -1,5 +1,6 @@
 package com.example.msalad.threads;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -101,6 +103,7 @@ public class PostActivity extends AppCompatActivity {
 
         et_reply = findViewById(R.id.reply_field);
 
+
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -131,6 +134,8 @@ public class PostActivity extends AppCompatActivity {
                     HashMap mappy = new HashMap();
                     mappy.put(androidId,"blue");
                     newMessagePath.updateChildren(messageMap);
+                    dismissKeyboard(PostActivity.this);
+                    et_reply.setText("");
                 }
             }
         });
@@ -138,6 +143,15 @@ public class PostActivity extends AppCompatActivity {
         loadPosts();
 
 
+        dismissKeyboard(PostActivity.this);
+
+    }
+
+    public void dismissKeyboard(AppCompatActivity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (null != activity.getCurrentFocus())
+            imm.hideSoftInputFromWindow(activity.getCurrentFocus()
+                    .getApplicationWindowToken(), 0);
     }
 
     public void loadPosts(){
@@ -188,6 +202,7 @@ public class PostActivity extends AppCompatActivity {
                     }
 
                 }
+                replies.setText(messages.size()+" Replies");
 
             }
 
