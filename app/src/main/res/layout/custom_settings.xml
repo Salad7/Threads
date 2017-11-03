@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="#F5F5F5"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_marginTop="8dp"
         android:orientation="horizontal">
 
@@ -15,31 +17,40 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textView17"
-                android:layout_width="348dp"
+                android:id="@+id/topicTitleTV"
+                android:layout_width="310dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:text="UNCC Charlotte"
+                android:visibility="visible"
                 android:textColor="#000"
                 android:textSize="24sp" />
 
             <TextView
-                android:id="@+id/textView16"
+                android:id="@+id/creationDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
-
+                android:layout_marginTop="4dp"
+                android:visibility="visible"
                 android:text="Created December 21st 2017"
                 android:textSize="16sp" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/button5"
-            android:layout_width="24dp"
+        <TextView
+            android:id="@+id/leaveBtn"
+            android:layout_width="wrap_content"
             android:layout_height="24dp"
             android:gravity="center"
-            android:layout_gravity="center"
-            android:background="@drawable/settings"/>
+            android:textColor="@color/colorPrimary"
+            android:layout_gravity="center_vertical"
+            android:layout_centerHorizontal="true"
+            android:textStyle="bold"
+            android:layout_centerVertical="true"
+            android:text="Report"
+            android:layout_marginRight="16dp"
 
-    </LinearLayout>
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
 </LinearLayout>

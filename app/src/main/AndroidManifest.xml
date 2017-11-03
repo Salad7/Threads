@@ -26,7 +26,7 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="AIzaSyA__LmlZTXkKTFYhBjtFRBcv1ugsmCFf2g" />
 
         <activity
             android:name=".MainActivity"
@@ -35,9 +35,21 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".ThreadActivity"
+            android:label="@string/title_activity_maps">
+        </activity>
+        <activity
+            android:name=".CreateThread"
+            android:label="@string/title_activity_maps">
+        </activity>
+        <activity
+            android:name=".PostActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:label="@string/title_activity_maps">
         </activity>
 
     </application>
