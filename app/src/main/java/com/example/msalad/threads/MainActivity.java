@@ -283,8 +283,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                             //mMap.getUiSettings().setMyLocationButtonEnabled(false);
                         }
                         //Toast.makeText(getApplicationContext(),mLastKnownLocation.getLongitude() + " " + mLastKnownLocation.getLatitude(),Toast.LENGTH_SHORT).show();
-                        //Log.d("MainActivity ",mLastKnownLocation.getLatitude()+" "+mLastKnownLocation.getLongitude());
-                        coors_near_me =  ThreadFinder.runSimulationQuad2(convertDouble(mLastKnownLocation.getLatitude())-.000050,convertDouble(mLastKnownLocation.getLongitude())-.000050,MainActivity.this);
+                        Log.d("MainActivity ",mLastKnownLocation.getLatitude()+" "+mLastKnownLocation.getLongitude());
+                        coors_near_me =  ThreadFinder.runSimulationQuad2(convertDouble(mLastKnownLocation.getLatitude())-.0050,convertDouble(mLastKnownLocation.getLongitude())-.0050,MainActivity.this);
                         //searchIfThreadExistsInFirebase();
 
 
@@ -326,9 +326,13 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     public Double convertDouble(Double l){
         String la = l+"";
         String la2 = "";
-        for(int i = 0; i < la.length()-1; i++){
+        Log.d("MainActivity ", "convertDouble before "+l);
+        int index = la.indexOf('.');
+
+        for(int i = 0; i < index+5; i++){
             la2+=la.charAt(i);
         }
+        Log.d("MainActivity ", "convertDouble after "+la2);
         return Double.parseDouble(la2);
 
 
