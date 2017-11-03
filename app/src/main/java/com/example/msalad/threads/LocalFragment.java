@@ -38,6 +38,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -196,6 +198,7 @@ public class LocalFragment extends Fragment {
                 }
 
                // Log.d("topics count ", topics.size()+"");
+                Collections.sort(topics);
                 localFragmentItemAdapter.notifyDataSetChanged();
 
 
@@ -245,7 +248,6 @@ public class LocalFragment extends Fragment {
         anonUsers.add(androidId);
         threadUsers.put("UIDs",anonUsers);
         DatabaseReference threadPath =  threadRef.child("Threads").child(threadCode);
-
         threadPath.updateChildren(map);
         threadPath.child("topics").child(openSpotInFirebase+"").child("anonCode").updateChildren(anonMap);
         threadPath.child("topics").child(openSpotInFirebase+"").updateChildren(topicsMap);

@@ -1,7 +1,10 @@
 package com.example.msalad.threads;
 
+import android.support.annotation.NonNull;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,7 +12,7 @@ import java.util.Map;
  * Created by cci-loaner on 10/23/17.
  */
 
-public class Topics {
+public class Topics implements Comparable{
 
     int position,replies, timeStamp;
     String topicTitle,parent,hostUID;
@@ -91,5 +94,19 @@ public class Topics {
 
     public void setMessages(ArrayList<Message> messages) {
         this.messages = messages;
+    }
+
+    @Override
+    public int compareTo(@NonNull Object o) {
+        Topics copy = (Topics) o;
+        if(timeStamp > copy.timeStamp){
+        return -1;
+        }
+        else if(timeStamp < copy.timeStamp){
+            return 1;
+        }
+        else{
+            return 0;
+        }
     }
 }
