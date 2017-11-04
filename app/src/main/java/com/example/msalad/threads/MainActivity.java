@@ -120,7 +120,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private void startThread(int i, String testKey, DataSnapshot dataSnapshot){
-       // Log.d("MainActivity "," Found valid testKey");
+        Log.d("MainActivity "," called startThread");
         SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
         editor.putString("threadCode", testKey);
         editor.apply();
@@ -136,6 +136,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         }
         else{
             int openAnon = -1;
+            boolean isAnonExistant = false;
             for(int x = 0; x < ThreadFinder.MAX_SETTINGS_THREAD; x++){
                 //If the thread exists
                 //Check if that threads code matches testKey
@@ -145,8 +146,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                     if(dataSnapshot.child("Anons").child(androidId).child(x+"").child("threadCode").getValue(String.class).equals(testKey)){
                         Intent intent = new Intent(MainActivity.this, ThreadActivity.class);
                         startActivity(intent);
-                        x = coors_near_me.size()+1;
+                        x = ThreadFinder.MAX_SETTINGS_THREAD+1;
                         isFound = true;
+                        isAnonExistant = true;
                     }
 
                 }
@@ -154,15 +156,17 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                     openAnon = i;
                 }
             }
-            HashMap map = new HashMap();
-            map.put("threadCode",testKey);
-            String threadName = dataSnapshot.child("Threads").child(testKey).child("threadTitle").getValue(String.class);
-            map.put("threadName",threadName);
-            map.put("timeStamp",ThreadFinder.getTimeStamp());
-            threadRef.child("Anons").child(androidId).child(openAnon+"").updateChildren(map);
-            Intent intent = new Intent(MainActivity.this, ThreadActivity.class);
-            startActivity(intent);
-            isFound = true;
+            if(isAnonExistant == false) {
+                HashMap map = new HashMap();
+                map.put("threadCode", testKey);
+                String threadName = dataSnapshot.child("Threads").child(testKey).child("threadTitle").getValue(String.class);
+                map.put("threadName", threadName);
+                map.put("timeStamp", ThreadFinder.getTimeStamp());
+                threadRef.child("Anons").child(androidId).child(openAnon + "").updateChildren(map);
+                Intent intent = new Intent(MainActivity.this, ThreadActivity.class);
+                startActivity(intent);
+                isFound = true;
+            }
 
         }
 
@@ -306,13 +310,13 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     public Double convertDouble(Double l){
         String la = l+"";
         String la2 = "";
-        Log.d("MainActivity ", "convertDouble before "+l);
+        //Log.d("MainActivity ", "convertDouble before "+l);
         int index = la.indexOf('.');
 
         for(int i = 0; i < index+5; i++){
             la2+=la.charAt(i);
         }
-        Log.d("MainActivity ", "convertDouble after "+la2);
+        //Log.d("MainActivity ", "convertDouble after "+la2);
         return Double.parseDouble(la2);
 
 
@@ -356,6 +360,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                         }
                     }
                     if (!isFound) {
+                        Log.d("MainActivity"," createThread called");
                         createThread();
                     }
 

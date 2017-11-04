@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="UNCC Library"
-        android:visibility="gone"
+        android:visibility="visible"
         android:textColor="#000"
 
         android:textAlignment="center"
@@ -60,8 +60,7 @@
             android:layout_width="270dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="32dp"
-
+            android:layout_marginLeft="23dp"
             android:textSize="24dp"
             android:gravity="left"
             android:textColor="#000"
@@ -76,18 +75,18 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:visibility="visible"
-        android:layout_marginBottom="8dp"
         android:orientation="horizontal"
+        android:layout_marginRight="8dp"
         android:id="@+id/linearLayout3"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true">
+        android:layout_alignBottom="@+id/shareBtn"
+        android:layout_alignStart="@+id/post_msg">
 
         <TextView
             android:id="@+id/post_replies"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginRight="24dp"
+            android:layout_marginRight="48dp"
             android:textColor="#000"
             android:text="1000 Replies"
             android:textAlignment="center"
@@ -98,13 +97,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#000"
-
             android:layout_gravity="right"
-            android:layout_marginRight="8dp"
+            android:layout_marginRight="0dp"
             android:text="37 Minutes ago"
             android:textSize="14sp" />
     </LinearLayout>
-</RelativeLayout>
+
+            <ImageButton
+                android:id="@+id/shareBtn"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/unlink"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true" />
+
+        </RelativeLayout>
     </android.support.v7.widget.CardView>
     <ListView
         android:id="@+id/messages_list"
@@ -120,7 +129,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="D"
-        android:visibility="gone"
+        android:visibility="visible"
         android:textAlignment="center"
         android:textSize="18sp" />
 

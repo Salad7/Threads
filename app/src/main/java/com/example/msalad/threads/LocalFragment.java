@@ -58,6 +58,7 @@ public class LocalFragment extends Fragment {
     LocalFragmentItemAdapter localFragmentItemAdapter;
     List<Topics> topics;
     FloatingActionButton post;
+    FloatingActionButton thread;
     private FirebaseDatabase database;
     private DatabaseReference threadRef;
     public String threadCode;
@@ -79,6 +80,13 @@ public class LocalFragment extends Fragment {
         threadCode = prefs.getString("threadCode", "8080");//"No name defined" is the default value.
         post = v.findViewById(R.id.postBtn);
         listView = v.findViewById(R.id.local_list);
+        thread = v.findViewById(R.id.threadBtn);
+        thread.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -93,6 +101,8 @@ public class LocalFragment extends Fragment {
                 p.setReplies(t.getReplies());
                 p.setTimeStamp(t.getTimeStamp());
                 p.setTopicTitle(t.getTopicTitle());
+                p.setTopicInvite(t.getTopicInvite());
+                //p.setInviteCode(t.getInviteCode());
                 String tt = threadTitle;
                 Intent intent = new Intent(getActivity(),PostActivity.class);
                 intent.putExtra("post",p);
@@ -226,21 +236,21 @@ public class LocalFragment extends Fragment {
         if(openSpotInFirebase > 10000){
             openSpotInFirebase = 0;
         }
-        HashMap map = new HashMap();
+        //HashMap map = new HashMap();
         HashMap anonMap = new HashMap();
         HashMap topicsMap = new HashMap();
         HashMap threadUsers = new HashMap();
         //map.put("threadTitle",title);
+        UUID uuid = UUID.randomUUID();
+        String ud = "";
+        for(int x = 0; x<5; x++){
+            ud+=uuid.toString().charAt(x);
+        }
         anonMap.put(androidId,"red");
+        topicsMap.put("topicInvite",ud);
         topicsMap.put("parent",threadCode);
         topicsMap.put("UID",androidId);
-
-            topicsMap.put("position",0);
-
-
-
             topicsMap.put("position",openSpotInFirebase);
-
         topicsMap.put("replies",0);
         topicsMap.put("upvotes",0);
         topicsMap.put("topicTitle",title);
@@ -250,10 +260,11 @@ public class LocalFragment extends Fragment {
         anonUsers.add(androidId);
         threadUsers.put("UIDs",anonUsers);
         DatabaseReference threadPath =  threadRef.child("Threads").child(threadCode);
-        threadPath.updateChildren(map);
+        //threadPath.updateChildren(map);
         threadPath.child("topics").child(openSpotInFirebase+"").child("anonCode").updateChildren(anonMap);
         threadPath.child("topics").child(openSpotInFirebase+"").updateChildren(topicsMap);
         threadPath.updateChildren(threadUsers);
+        threadRef.child("Invites").child(ud).setValue(threadCode);
 
     }
 

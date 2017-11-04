@@ -15,10 +15,18 @@ public class Post implements Serializable{
     }
 
     int position,upvotes,replies, timeStamp;
-    String topicTitle,parent,hostUID;
+    String topicTitle,parent,hostUID,topicInvite;
     Map anonCode = new HashMap<String,String>();
     ArrayList<String> upvoters;
     ArrayList<Message> messages;
+
+    public String getTopicInvite() {
+        return topicInvite;
+    }
+
+    public void setTopicInvite(String topicInvite) {
+        this.topicInvite = topicInvite;
+    }
 
     public int getPosition() {
         return position;

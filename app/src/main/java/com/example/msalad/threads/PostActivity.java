@@ -52,6 +52,7 @@ public class PostActivity extends AppCompatActivity {
     TextView upvoteCount;
     ImageButton upvoteBtn;
     ImageButton backBtn;
+    ImageButton shareBtn;
     Post incomingPost;
     String threadCode;
     EditText et_reply;
@@ -76,27 +77,35 @@ public class PostActivity extends AppCompatActivity {
         upvoteBtn = findViewById(R.id.upvoteBtnPost);
         upvoteCount = findViewById(R.id.post_upvotes);
         backBtn = findViewById(R.id.backBtn);
+        shareBtn = findViewById(R.id.shareBtn);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(PostActivity.this,ThreadActivity.class);
+                Intent i = new Intent(PostActivity.this, ThreadActivity.class);
+                startActivity(i);
+            }
+        });
+        shareBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(PostActivity.this,ShareContactsActivity.class);
                 startActivity(i);
             }
         });
         send = findViewById(R.id.send);
         messages = new ArrayList<>();
-        if(getIntent().getExtras() != null){
+        if (getIntent().getExtras() != null) {
             incomingPost = (Post) getIntent().getSerializableExtra("post");
             title.setText(getIntent().getStringExtra("tt"));
             setTitle(getIntent().getStringExtra("tt"));
-            replies.setText(incomingPost.getReplies()+" Replies");
+            replies.setText(incomingPost.getReplies() + " Replies");
             timestamp.setText(ThreadFinder.getElapsedTime(incomingPost.getTimeStamp()));
             message.setText(incomingPost.getTopicTitle());
             topicPostion = incomingPost.getPosition();
-            if(incomingPost.getUpvoters() != null) {
+            if (incomingPost.getUpvoters() != null) {
                 upvoteCount.setText(incomingPost.getUpvoters().size() + "");
-            }else{
-                upvoteCount.setText(0+"");
+            } else {
+                upvoteCount.setText(0 + "");
             }
             threadCode = getIntent().getStringExtra("threadCode");
         }
@@ -107,21 +116,20 @@ public class PostActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String androidId = Settings.Secure.getString(PostActivity.this.getContentResolver(),
                         Settings.Secure.ANDROID_ID);
-                if(incomingPost.getUpvoters() == null){
+                if (incomingPost.getUpvoters() == null) {
                     ArrayList<String> alist = new ArrayList<String>();
                     alist.add(androidId);
                     HashMap map = new HashMap();
-                    map.put("upvoters",alist);
+                    map.put("upvoters", alist);
                     threadRef.child("Threads").child(threadCode).child("topics").updateChildren(map);
-                    upvoteCount.setText(1+"");
-                }
-                else if(!incomingPost.getUpvoters().contains(androidId)){
+                    upvoteCount.setText(1 + "");
+                } else if (!incomingPost.getUpvoters().contains(androidId)) {
                     ArrayList<String> alist = incomingPost.getUpvoters();
                     alist.add(androidId);
                     HashMap map = new HashMap();
-                    map.put("upvoters",alist);
+                    map.put("upvoters", alist);
                     threadRef.child("Threads").child(threadCode).child("topics").updateChildren(map);
-                    upvoteCount.setText(alist.size()+"");
+                    upvoteCount.setText(alist.size() + "");
                 }
             }
         });
@@ -130,9 +138,9 @@ public class PostActivity extends AppCompatActivity {
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(et_reply.getText().toString().length() > 0){
-                    DatabaseReference newMessagePath = threadRef.child("Threads").child(threadCode).child("topics").child(topicPostion+"").child("messages").child(messagePosition+"");
-                    Log.d("PostActivity","Topic position "+topicPostion);
+                if (et_reply.getText().toString().length() > 0) {
+                    DatabaseReference newMessagePath = threadRef.child("Threads").child(threadCode).child("topics").child(topicPostion + "").child("messages").child(messagePosition + "");
+                    Log.d("PostActivity", "Topic position " + topicPostion);
                     Message message = new Message();
                     String androidId = Settings.Secure.getString(PostActivity.this.getContentResolver(),
                             Settings.Secure.ANDROID_ID);
@@ -143,19 +151,19 @@ public class PostActivity extends AppCompatActivity {
                     message.setTimeStamp(ThreadFinder.getTimeStamp());
                     HashMap map = new HashMap();
                     HashMap messageMap = new HashMap();
-                    map.put(androidId,"blue");
+                    map.put(androidId, "blue");
                     message.setAnonCode(map);
                     message.setPosition(messagePosition);
-                    messageMap.put("UID",message.getAnonCode());
-                    messageMap.put("timeStamp",message.getTimeStamp());
+                    messageMap.put("UID", message.getAnonCode());
+                    messageMap.put("timeStamp", message.getTimeStamp());
                     //messageMap.put("upvotes",message.getUpvotes())
-                    messageMap.put("replies",message.getReplies());
-                    messageMap.put("message",message.getMsg());
-                    messageMap.put("position",message.getPosition());
-                    messageMap.put("upvotes",message.getUpvotes());
+                    messageMap.put("replies", message.getReplies());
+                    messageMap.put("message", message.getMsg());
+                    messageMap.put("position", message.getPosition());
+                    messageMap.put("upvotes", message.getUpvotes());
 
                     HashMap mappy = new HashMap();
-                    mappy.put(androidId,"blue");
+                    mappy.put(androidId, "blue");
                     newMessagePath.updateChildren(messageMap);
                     dismissKeyboard(PostActivity.this);
                     et_reply.setText("");
@@ -178,55 +186,54 @@ public class PostActivity extends AppCompatActivity {
                     .getApplicationWindowToken(), 0);
     }
 
-    public void loadPosts(){
+    public void loadPosts() {
         threadRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 int currentLowest = -1;
                 messages.clear();
-                if(dataSnapshot.child("Threads").child(threadCode).exists()){
+                if (dataSnapshot.child("Threads").child(threadCode).exists()) {
                     DataSnapshot threadPath = dataSnapshot.child("Threads").child(threadCode);
-                    if(threadPath.child("topics").exists()){
+                    if (threadPath.child("topics").exists()) {
                         DataSnapshot topicPath = threadPath.child("topics");
-                        if(topicPath.child(topicPostion+"").child("messages").exists()){
-                            DataSnapshot messagesPath = topicPath.child(topicPostion+"").child("messages");
+                        if (topicPath.child(topicPostion + "").child("messages").exists()) {
+                            DataSnapshot messagesPath = topicPath.child(topicPostion + "").child("messages");
                             int totalMessages = (int) messagesPath.getChildrenCount();
                             int messagesFound = 0;
-                            for(int i = 0; i < ThreadFinder.MAX_MESSAGES; i++){
-                                if(messagesPath.child(i+"").exists() && totalMessages >= messagesFound){
-                                    Log.d("PostActivity"," Found message!");
-                                DataSnapshot specificMessagesPath = messagesPath.child(i+"");
-                                //if(specificMessagesPath.child("anonCode").exists()){
-                                Message message = new Message();
-                                    if(specificMessagesPath.child("upvoters").exists()){
-                                    message.setUpvoters((ArrayList)specificMessagesPath.child("upvoters").getValue());
+                            for (int i = 0; i < ThreadFinder.MAX_MESSAGES; i++) {
+                                if (messagesPath.child(i + "").exists() && totalMessages >= messagesFound) {
+                                    Log.d("PostActivity", " Found message!");
+                                    DataSnapshot specificMessagesPath = messagesPath.child(i + "");
+                                    //if(specificMessagesPath.child("anonCode").exists()){
+                                    Message message = new Message();
+                                    if (specificMessagesPath.child("upvoters").exists()) {
+                                        message.setUpvoters((ArrayList) specificMessagesPath.child("upvoters").getValue());
                                     }
 
-                                message.setMsg(specificMessagesPath.child("message").getValue(String.class));
-                                message.setPosition(i);
-                                message.setTimeStamp(specificMessagesPath.child("timeStamp").getValue(Integer.class));
-                                message.setAnonCode((Map) specificMessagesPath.child("anonCode").getValue());
-                                message.setReplies(specificMessagesPath.child("replies").getValue(Integer.class));
-                                messages.add(message);
-                                messagesFound += 1;
+                                    message.setMsg(specificMessagesPath.child("message").getValue(String.class));
+                                    message.setPosition(i);
+                                    message.setTimeStamp(specificMessagesPath.child("timeStamp").getValue(Integer.class));
+                                    message.setAnonCode((Map) specificMessagesPath.child("anonCode").getValue());
+                                    message.setReplies(specificMessagesPath.child("replies").getValue(Integer.class));
+                                    messages.add(message);
+                                    messagesFound += 1;
 
-                                //}
-                                }
-                                else{
-                                    if(currentLowest == -1){
-                                    currentLowest = i;
+                                    //}
+                                } else {
+                                    if (currentLowest == -1) {
+                                        currentLowest = i;
                                         messagePosition = i;
                                     }
                                 }
 
                             }
                         }
-                    }else{
+                    } else {
                         messagePosition = 0;
                     }
 
                 }
-                replies.setText(messages.size()+" Replies");
+                replies.setText(messages.size() + " Replies");
 
             }
 
@@ -235,13 +242,13 @@ public class PostActivity extends AppCompatActivity {
 
             }
         });
-        MessageAdapter messageAdapter = new MessageAdapter(this,R.layout.custom_message,messages);
+        MessageAdapter messageAdapter = new MessageAdapter(this, R.layout.custom_message, messages);
         messagesList.setAdapter(messageAdapter);
         messageAdapter.notifyDataSetChanged();
         messageAdapter.setNotifyOnChange(true);
 
-        Log.d("PostActivity ",messages.size()+"");
-        Log.d("PostActivity ","Message adapter size "+messageAdapter.getCount());
+        Log.d("PostActivity ", messages.size() + "");
+        Log.d("PostActivity ", "Message adapter size " + messageAdapter.getCount());
     }
 
     @Override
@@ -249,6 +256,9 @@ public class PostActivity extends AppCompatActivity {
         super.onStart();
 
     }
+
+
+
 
 
     public class MessageAdapter extends ArrayAdapter<Message> {
