@@ -3,6 +3,7 @@ package com.example.msalad.threads;
 import android.*;
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -45,6 +46,7 @@ public class ShareContactsActivity extends AppCompatActivity {
     private static final int MY_PERMISSIONS_REQUEST_SEND_SMS =0 ;
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     private Button shareBtn;
+    private String inviteCode;
     ListView mContactsList;
     ArrayList<Contact> contacts;
     ArrayList<String> recipients;
@@ -55,6 +57,14 @@ public class ShareContactsActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
+
+        if(!getIntent().hasExtra("invite")){
+            //Intent i = new Intent(ShareContactsActivity.this,ThreadActivity.class);
+            Toast.makeText(ShareContactsActivity.this,"Invalide invite code",Toast.LENGTH_SHORT).show();
+            finish();
+            //startActivity(i);
+        }
+        inviteCode = getIntent().getStringExtra("invite");
         mContactsList =
                 findViewById(R.id.contacts_list);
         contacts = new ArrayList<>();
@@ -140,9 +150,10 @@ public class ShareContactsActivity extends AppCompatActivity {
             SmsManager smsManager = SmsManager.getDefault();
             Log.d("ShareContactsActivity","sendSMSMessage size "+recipients.size());
             for(int i = 0; i < recipients.size(); i++) {
-                smsManager.sendTextMessage(recipients.get(i), null, "Check out this post on Threads code : UAU01 ", null, null);
+                smsManager.sendTextMessage(recipients.get(i), null, "Check out this post on Threads code : "+inviteCode, null, null);
                 Toast.makeText(getApplicationContext(), "SMS sent.",
                         Toast.LENGTH_LONG).show();
+                finish();
             }
         }
     }
@@ -164,9 +175,10 @@ public class ShareContactsActivity extends AppCompatActivity {
                     SmsManager smsManager = SmsManager.getDefault();
                     Log.d("ShareContactsActivity","rpermissions request size "+recipients.size());
                     for(int i = 0; i < recipients.size(); i++) {
-                        smsManager.sendTextMessage(recipients.get(i), null, "Check out this post on Threads code : UAU01 ", null, null);
+                        smsManager.sendTextMessage(recipients.get(i), null, "Check out this post on Threads code : "+inviteCode, null, null);
                         Toast.makeText(getApplicationContext(), "SMS sent.",
                                 Toast.LENGTH_LONG).show();
+                        finish();
                     }
                 } else {
                     Toast.makeText(getApplicationContext(),

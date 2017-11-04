@@ -89,6 +89,7 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(PostActivity.this,ShareContactsActivity.class);
+                i.putExtra("invite",incomingPost.getTopicInvite());
                 startActivity(i);
             }
         });
