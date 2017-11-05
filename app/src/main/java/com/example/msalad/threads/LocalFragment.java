@@ -1,5 +1,6 @@
 package com.example.msalad.threads;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,8 +12,11 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +25,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -84,7 +89,8 @@ public class LocalFragment extends Fragment {
         thread.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                JoinThreadDialogFragment joinThreadDialogFragment = new JoinThreadDialogFragment(getActivity());
+                joinThreadDialogFragment.show();
             }
         });
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -265,7 +271,7 @@ public class LocalFragment extends Fragment {
         threadPath.child("topics").child(openSpotInFirebase+"").child("anonCode").updateChildren(anonMap);
         threadPath.child("topics").child(openSpotInFirebase+"").updateChildren(topicsMap);
         threadPath.updateChildren(threadUsers);
-        threadRef.child("Invites").child(ud).setValue(threadCode);
+        threadRef.child("Invites").child(ud).setValue(threadCode+">"+openSpotInFirebase);
 
     }
 
@@ -370,5 +376,115 @@ public class LocalFragment extends Fragment {
 
             return convertView;
         }
+    }
+
+
+    public class JoinThreadDialogFragment extends Dialog{
+        EditText editText;
+        ImageButton joinBtn;
+        String tp;
+        String tCode;
+        String tPosition;
+        String longVersion;
+        Boolean foundThread = false;
+
+        public JoinThreadDialogFragment(@NonNull Context context) {
+            super(context);
+        }
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.custom_dialog_join_thread);
+            editText = findViewById(R.id.et_join);
+            joinBtn = findViewById(R.id.joinBtn);
+
+            editText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    tp = editable.toString();
+                }
+            });
+
+            joinBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //Toast.makeText(getActivity()," Clicked button, edit text is: "+editText.getText().toString(),Toast.LENGTH_SHORT).show();
+                    Log.d("LocalFragment"," Join button hit "+tp);
+                    if(editText.getText().toString().length()>2) {
+
+                        initFirebase();
+                    }
+                    else{
+                        Toast.makeText(getActivity()," Code invalid please, try again "+tp,Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            });
+        }
+
+        public void initFirebase(){
+           threadRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    if(dataSnapshot.child("Invites").child(tp).exists()){
+                        //Start PostActivty
+                        Toast.makeText(getActivity()," Found code! ",Toast.LENGTH_SHORT).show();
+                        Log.d("LocalFragment","Found code! ready to start postActivity!");
+                        longVersion = dataSnapshot.child("Invites").child(tp).getValue(String.class);
+                        String[] decoded = decodeLongVersion();
+                        DataSnapshot topicPath = dataSnapshot.child("Threads").child(decoded[0]).child("topics").child(decoded[1]);
+                        Post p = new Post();
+                        p.setTopicInvite(topicPath.child("topicInvite").getValue(String.class));
+                        p.setTopicTitle(topicPath.child("topicTitle").getValue(String.class));
+                        p.setTimeStamp(topicPath.child("timeStamp").getValue(Integer.class));
+                        p.setReplies(topicPath.child("replies").getValue(Integer.class));
+                        p.setAnonCode((HashMap)topicPath.child("anonCode").getValue());
+                        p.setHostUID(topicPath.child("UID").getValue(String.class));
+                        p.setParent(topicPath.child("parent").getValue(String.class));
+                        p.setPosition(topicPath.child("position").getValue(Integer.class));
+                        Intent i = new Intent(getActivity(),PostActivity.class);
+                        i.putExtra("post",p);
+                        i.putExtra("tt",threadTitle);
+                        i.putExtra("threadCode",threadCode);
+                        startActivity(i);
+                    }
+                    else{
+                        Toast.makeText(getActivity()," Code invalid please, try again",Toast.LENGTH_SHORT).show();
+                        Log.d("LocalFragment"," Could not find code");
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+            //threadRef.removeEventListener(t);
+
+
+        }
+
+        public String[] decodeLongVersion(){
+            String[] parts = longVersion.split(">");
+            Log.d("decodingLongVersion","Part 1: "+parts[0]);
+            Log.d("decodingLongVersion","Part 2: "+parts[1]);
+            return parts;
+
+        }
+
+
     }
 }
