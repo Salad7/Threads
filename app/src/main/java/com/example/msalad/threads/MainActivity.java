@@ -84,7 +84,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_main);
         FirebaseApp.initializeApp(this);
         NewtonCradleLoading newtonCradleLoading; newtonCradleLoading = (NewtonCradleLoading)findViewById(R.id.newton_cradle_loading);
-        newtonCradleLoading.setLoadingColor(R.color.colorPrimary);
+        newtonCradleLoading.setLoadingColor(R.color.colorPrimaryDark);
         newtonCradleLoading.start();
 
         //Date d = new Date();
