@@ -1,5 +1,5 @@
 # Threads
-Anonymous group messaging app
+Anonymous group messaging app.
 
 import java.util.ArrayList;
 import java.util.HashMap;
