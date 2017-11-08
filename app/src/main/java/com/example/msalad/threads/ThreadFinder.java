@@ -23,6 +23,7 @@ public class ThreadFinder{
     final static int MAX_SETTINGS_THREAD = 100;
     final static int MAX_MESSAGES = 10000;
     final static int MAX_TOPICS = 1000;
+    final static int MAX_NOTIFICATIONS = 10000;
 
    // public static void main(String[] args){
      //   double lat = 35.281412;

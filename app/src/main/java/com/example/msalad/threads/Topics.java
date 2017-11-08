@@ -17,8 +17,16 @@ public class Topics implements Comparable{
     int position,replies, timeStamp;
     String topicTitle,parent,hostUID,topicInvite;
     Map anonCode = new HashMap<String,String>();
-    ArrayList<String> upvoters;
+    ArrayList<String> upvoters,notifyList;
     ArrayList<Message> messages;
+
+    public ArrayList<String> getNotifyList() {
+        return notifyList;
+    }
+
+    public void setNotifyList(ArrayList<String> notifyList) {
+        this.notifyList = notifyList;
+    }
 
     public Topics() {
     }

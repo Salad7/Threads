@@ -59,8 +59,10 @@ public class PostActivity extends AppCompatActivity {
     ImageButton send;
     int topicPostion;
     ArrayList<Message> messages;
+    ArrayList<String> notifyList;
     int messagePosition;
     MessageAdapter messageAdapter;
+    String androidId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -103,6 +105,7 @@ public class PostActivity extends AppCompatActivity {
             timestamp.setText(ThreadFinder.getElapsedTime(incomingPost.getTimeStamp()));
             message.setText(incomingPost.getTopicTitle());
             topicPostion = incomingPost.getPosition();
+            notifyList = getIntent().getStringArrayListExtra("notifyList");
             if (incomingPost.getUpvoters() != null) {
                 upvoteCount.setText(incomingPost.getUpvoters().size() + "");
             } else {
@@ -143,7 +146,7 @@ public class PostActivity extends AppCompatActivity {
                     DatabaseReference newMessagePath = threadRef.child("Threads").child(threadCode).child("topics").child(topicPostion + "").child("messages").child(messagePosition + "");
                     Log.d("PostActivity", "Topic position " + topicPostion);
                     Message message = new Message();
-                    String androidId = Settings.Secure.getString(PostActivity.this.getContentResolver(),
+                    androidId = Settings.Secure.getString(PostActivity.this.getContentResolver(),
                             Settings.Secure.ANDROID_ID);
                     message.setMsg(et_reply.getText().toString());
                     message.setHostUID(androidId);
@@ -162,12 +165,13 @@ public class PostActivity extends AppCompatActivity {
                     messageMap.put("message", message.getMsg());
                     messageMap.put("position", message.getPosition());
                     messageMap.put("upvotes", message.getUpvotes());
-
                     HashMap mappy = new HashMap();
                     mappy.put(androidId, "blue");
                     newMessagePath.updateChildren(messageMap);
                     dismissKeyboard(PostActivity.this);
                     et_reply.setText("");
+                    queueNotifications(message.getMsg());
+
 
                 }
             }
@@ -178,6 +182,40 @@ public class PostActivity extends AppCompatActivity {
 
 
         dismissKeyboard(PostActivity.this);
+
+    }
+
+    public void queueNotifications(final String msg){
+        if(!notifyList.contains(androidId)){
+            notifyList.add(androidId);
+            //Update firebase
+            HashMap map = new HashMap();
+            map.put("notifyList",notifyList);
+            threadRef.child("Threads").child(threadCode).child("topics").child(topicPostion+"").updateChildren(map);
+            threadRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(!dataSnapshot.child("Notify").exists()){
+                        threadRef.child("Notify").child(0+"").child("message").setValue(msg);
+                        threadRef.child("Notify").child(0+"").child("notifyList").setValue(notifyList);
+                    }
+                    else{
+                        for(int i = 0; i < ThreadFinder.MAX_NOTIFICATIONS; i++){
+                            if(!dataSnapshot.child("Notify").child(i+"").exists()){
+                                threadRef.child("Notify").child(i+"").child("message").setValue(msg);
+                                threadRef.child("Notify").child(i+"").child("notifyList").setValue(notifyList);
+                                i = ThreadFinder.MAX_NOTIFICATIONS+1;
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
 
     }
 

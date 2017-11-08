@@ -69,6 +69,7 @@ public class LocalFragment extends Fragment {
     public String threadCode;
     private String threadTitle;
     private int openSpotInFirebase = 0;
+    private ArrayList<String> notifyList;
     private TextView threadTitleTV;
     private String MY_PREFS_NAME = "MY_PREFS_NAME";
 
@@ -85,6 +86,7 @@ public class LocalFragment extends Fragment {
         post = v.findViewById(R.id.postBtn);
         listView = v.findViewById(R.id.local_list);
         thread = v.findViewById(R.id.threadBtn);
+        notifyList = new ArrayList<>();
         thread.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -194,6 +196,7 @@ public class LocalFragment extends Fragment {
                                         topic.setParent(specificThreadPath.child("parent").getValue(String.class));
                                         topic.setReplies(specificThreadPath.child("replies").getValue(Integer.class));
                                         topic.setTopicInvite(specificThreadPath.child("topicInvite").getValue(String.class));
+                                        topic.setNotifyList((ArrayList) specificThreadPath.child("notifyList").getValue());
                                         if (specificThreadPath.child("messages").exists()) {
                                             topic.setMessages((ArrayList) specificThreadPath.child("messages").getValue());
                                         }
@@ -256,6 +259,9 @@ public class LocalFragment extends Fragment {
         topicsMap.put("replies", 0);
         topicsMap.put("upvotes", 0);
         topicsMap.put("topicTitle", title);
+        ArrayList<String> notify = new ArrayList<>();
+        notify.add(androidId);
+        topicsMap.put("notifyList",notify);
         //Log.d("LocalFragment",ThreadFinder.getTimeStamp()+"");
         topicsMap.put("timeStamp", ThreadFinder.getTimeStamp());
         ArrayList<String> anonUsers = new ArrayList<>();
@@ -360,6 +366,8 @@ public class LocalFragment extends Fragment {
                     intent.putExtra("post", p);
                     intent.putExtra("tt", tt);
                     intent.putExtra("threadCode", threadCode);
+                    intent.putExtra("notifyList", topics.get(position).getNotifyList());
+                    //intent.putExtra("notifyList",)
                     Log.d("LocalFragment ", "Sending topicInvite " + p.getTopicInvite());
                     startActivity(intent);
                 }
