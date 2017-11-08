@@ -122,7 +122,8 @@
         android:layout_height="match_parent"
         android:layout_toEndOf="@+id/post_title"
         android:layout_below="@+id/cardView"
-        android:layout_above="@+id/back_btn" />
+        android:layout_above="@+id/back_btn"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:id="@+id/textView15"

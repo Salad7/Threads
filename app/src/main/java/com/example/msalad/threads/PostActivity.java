@@ -60,7 +60,7 @@ public class PostActivity extends AppCompatActivity {
     int topicPostion;
     ArrayList<Message> messages;
     int messagePosition;
-
+    MessageAdapter messageAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -172,7 +172,8 @@ public class PostActivity extends AppCompatActivity {
                 }
             }
         });
-
+        messageAdapter = new MessageAdapter(this, R.layout.custom_message, messages);
+        messagesList.setAdapter(messageAdapter);
         loadPosts();
 
 
@@ -207,19 +208,22 @@ public class PostActivity extends AppCompatActivity {
                                     DataSnapshot specificMessagesPath = messagesPath.child(i + "");
                                     //if(specificMessagesPath.child("anonCode").exists()){
                                     Message message = new Message();
+                                    try {
                                     if (specificMessagesPath.child("upvoters").exists()) {
                                         message.setUpvoters((ArrayList) specificMessagesPath.child("upvoters").getValue());
                                     }
-
                                     message.setMsg(specificMessagesPath.child("message").getValue(String.class));
                                     message.setPosition(i);
-                                    message.setTimeStamp(specificMessagesPath.child("timeStamp").getValue(Integer.class));
+
+                                        message.setTimeStamp(specificMessagesPath.child("timeStamp").getValue(Integer.class));
+
                                     message.setAnonCode((Map) specificMessagesPath.child("anonCode").getValue());
                                     message.setReplies(specificMessagesPath.child("replies").getValue(Integer.class));
+                                    } catch (Exception e){
+                                        e.printStackTrace();
+                                    }
                                     messages.add(message);
                                     messagesFound += 1;
-
-                                    //}
                                 } else {
                                     if (currentLowest == -1) {
                                         currentLowest = i;
@@ -243,11 +247,9 @@ public class PostActivity extends AppCompatActivity {
 
             }
         });
-        MessageAdapter messageAdapter = new MessageAdapter(this, R.layout.custom_message, messages);
-        messagesList.setAdapter(messageAdapter);
+
         messageAdapter.notifyDataSetChanged();
         messageAdapter.setNotifyOnChange(true);
-
         Log.d("PostActivity ", messages.size() + "");
         Log.d("PostActivity ", "Message adapter size " + messageAdapter.getCount());
     }

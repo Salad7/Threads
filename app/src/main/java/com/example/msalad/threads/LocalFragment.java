@@ -73,11 +73,10 @@ public class LocalFragment extends Fragment {
     private String MY_PREFS_NAME = "MY_PREFS_NAME";
 
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_local,container,false);
+        View v = inflater.inflate(R.layout.fragment_local, container, false);
         FirebaseApp.initializeApp(getContext());
         database = FirebaseDatabase.getInstance();
         threadRef = database.getReference();
@@ -110,15 +109,15 @@ public class LocalFragment extends Fragment {
                 p.setTopicInvite(t.getTopicInvite());
                 //p.setInviteCode(t.getInviteCode());
                 String tt = threadTitle;
-                Intent intent = new Intent(getActivity(),PostActivity.class);
-                intent.putExtra("post",p);
-                intent.putExtra("tt",tt);
+                Intent intent = new Intent(getActivity(), PostActivity.class);
+                intent.putExtra("post", p);
+                intent.putExtra("tt", tt);
                 startActivity(intent);
             }
         });
         threadTitleTV = v.findViewById(R.id.textView8);
         topics = new ArrayList<>();
-        localFragmentItemAdapter = new LocalFragmentItemAdapter(getContext(),R.layout.custom_topic,topics);
+        localFragmentItemAdapter = new LocalFragmentItemAdapter(getContext(), R.layout.custom_topic, topics);
         listView.setAdapter(localFragmentItemAdapter);
 
         addFirebaseLocalThreads();
@@ -140,8 +139,8 @@ public class LocalFragment extends Fragment {
                             public void onClick(DialogInterface dialog, int which) {
                                 String topic = input.getText().toString();
                                 if (topic.length() > 0) {
-                                        Toast.makeText(getActivity(),
-                                                "Topic created!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(),
+                                            "Topic created!", Toast.LENGTH_SHORT).show();
                                     createTopic(topic);
                                 }
                             }
@@ -162,13 +161,13 @@ public class LocalFragment extends Fragment {
         return v;
     }
 
-    public void addFirebaseLocalThreads(){
+    public void addFirebaseLocalThreads() {
         threadRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.child("Threads").child(threadCode).exists()){
+                if (dataSnapshot.child("Threads").child(threadCode).exists()) {
                     topics.clear();
-                    DataSnapshot threadPath =  dataSnapshot.child("Threads").child(threadCode);
+                    DataSnapshot threadPath = dataSnapshot.child("Threads").child(threadCode);
                     threadTitle = threadPath.child("threadTitle").getValue(String.class);
                     threadTitleTV.setText(threadTitle);
                     try {
@@ -211,12 +210,12 @@ public class LocalFragment extends Fragment {
 
                             }
                         }
-                    }catch (NullPointerException e){
+                    } catch (NullPointerException e) {
 
                     }
                 }
 
-               // Log.d("topics count ", topics.size()+"");
+                // Log.d("topics count ", topics.size()+"");
                 Collections.sort(topics);
                 localFragmentItemAdapter.notifyDataSetChanged();
 
@@ -231,16 +230,12 @@ public class LocalFragment extends Fragment {
         });
 
 
-
-
-
-
     }
 
-    public void createTopic(String title){
+    public void createTopic(String title) {
         String androidId = Settings.Secure.getString(getActivity().getContentResolver(),
                 Settings.Secure.ANDROID_ID);
-        if(openSpotInFirebase > 10000){
+        if (openSpotInFirebase > 10000) {
             openSpotInFirebase = 0;
         }
         //HashMap map = new HashMap();
@@ -250,38 +245,38 @@ public class LocalFragment extends Fragment {
         //map.put("threadTitle",title);
         UUID uuid = UUID.randomUUID();
         String ud = "";
-        for(int x = 0; x<5; x++){
-            ud+=uuid.toString().charAt(x);
+        for (int x = 0; x < 5; x++) {
+            ud += uuid.toString().charAt(x);
         }
-        anonMap.put(androidId,"red");
-        topicsMap.put("topicInvite",ud);
-        topicsMap.put("parent",threadCode);
-        topicsMap.put("UID",androidId);
-            topicsMap.put("position",openSpotInFirebase);
-        topicsMap.put("replies",0);
-        topicsMap.put("upvotes",0);
-        topicsMap.put("topicTitle",title);
+        anonMap.put(androidId, "red");
+        topicsMap.put("topicInvite", ud);
+        topicsMap.put("parent", threadCode);
+        topicsMap.put("UID", androidId);
+        topicsMap.put("position", openSpotInFirebase);
+        topicsMap.put("replies", 0);
+        topicsMap.put("upvotes", 0);
+        topicsMap.put("topicTitle", title);
         //Log.d("LocalFragment",ThreadFinder.getTimeStamp()+"");
-        topicsMap.put("timeStamp",ThreadFinder.getTimeStamp());
+        topicsMap.put("timeStamp", ThreadFinder.getTimeStamp());
         ArrayList<String> anonUsers = new ArrayList<>();
         anonUsers.add(androidId);
-        threadUsers.put("UIDs",anonUsers);
-        DatabaseReference threadPath =  threadRef.child("Threads").child(threadCode);
+        threadUsers.put("UIDs", anonUsers);
+        DatabaseReference threadPath = threadRef.child("Threads").child(threadCode);
         //threadPath.updateChildren(map);
-        threadPath.child("topics").child(openSpotInFirebase+"").child("anonCode").updateChildren(anonMap);
-        threadPath.child("topics").child(openSpotInFirebase+"").updateChildren(topicsMap);
+        threadPath.child("topics").child(openSpotInFirebase + "").child("anonCode").updateChildren(anonMap);
+        threadPath.child("topics").child(openSpotInFirebase + "").updateChildren(topicsMap);
         threadPath.updateChildren(threadUsers);
-        threadRef.child("Invites").child(ud).setValue(threadCode+">"+openSpotInFirebase);
+        threadRef.child("Invites").child(ud).setValue(threadCode + ">" + openSpotInFirebase);
 
     }
 
 
-
-    public class LocalFragmentItemAdapter extends ArrayAdapter<Topics>{
+    public class LocalFragmentItemAdapter extends ArrayAdapter<Topics> {
 
         List<Topics> topics;
         Context c;
         int res;
+
         public LocalFragmentItemAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<Topics> objects) {
             super(context, resource, objects);
             topics = objects;
@@ -300,7 +295,7 @@ public class LocalFragment extends Fragment {
         public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             LayoutInflater inflater = (LayoutInflater) c
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(res,parent,false);
+            convertView = inflater.inflate(res, parent, false);
             final TextView upvote = (TextView) convertView.findViewById(R.id.upvote_txt);
             TextView reply = (TextView) convertView.findViewById(R.id.reply_txt);
             TextView message = (TextView) convertView.findViewById(R.id.message_txt);
@@ -309,16 +304,15 @@ public class LocalFragment extends Fragment {
 
             //ImageView cancel = (ImageView) convertView.findViewById(R.id.cancel_iv);
 //            Log.d("topics size",topics.get(position).upvoters.size()+"");
-            if(topics.get(position).getUpvoters() != null) {
+            if (topics.get(position).getUpvoters() != null) {
                 upvote.setText(topics.get(position).getUpvoters().size() + "");
-            }else{
-                upvote.setText(0+"");
+            } else {
+                upvote.setText(0 + "");
 
             }
-            if(topics.get(position).getMessages() != null) {
+            if (topics.get(position).getMessages() != null) {
                 reply.setText(topics.get(position).getMessages().size() + " Replies");
-            }
-            else{
+            } else {
                 reply.setText("0 Replies");
 
             }
@@ -330,18 +324,17 @@ public class LocalFragment extends Fragment {
                 public void onClick(View v) {
                     String androidId = Settings.Secure.getString(getActivity().getContentResolver(),
                             Settings.Secure.ANDROID_ID);
-                    if(topics.get(position).getUpvoters() == null){
-                        HashMap map = new HashMap<String,ArrayList<String>>();
+                    if (topics.get(position).getUpvoters() == null) {
+                        HashMap map = new HashMap<String, ArrayList<String>>();
                         ArrayList<String> upvoters = new ArrayList<String>();
                         upvoters.add(androidId);
-                        map.put("upvoters",upvoters);
-                        threadRef.child("Threads").child(threadCode).child("topics").child(topics.get(position).getPosition()+"").updateChildren(map);
-                    }
-                    else if(!topics.get(position).getUpvoters().contains(androidId)){
+                        map.put("upvoters", upvoters);
+                        threadRef.child("Threads").child(threadCode).child("topics").child(topics.get(position).getPosition() + "").updateChildren(map);
+                    } else if (!topics.get(position).getUpvoters().contains(androidId)) {
                         topics.get(position).getUpvoters().add(androidId);
-                        HashMap map = new HashMap<String,ArrayList<String>>();
-                        map.put("upvoters",topics.get(position).getUpvoters());
-                        threadRef.child("Threads").child(threadCode).child("topics").child(topics.get(position).getPosition()+"").updateChildren(map);
+                        HashMap map = new HashMap<String, ArrayList<String>>();
+                        map.put("upvoters", topics.get(position).getUpvoters());
+                        threadRef.child("Threads").child(threadCode).child("topics").child(topics.get(position).getPosition() + "").updateChildren(map);
                         //Update firebase here
                     }
                 }
@@ -363,15 +356,14 @@ public class LocalFragment extends Fragment {
                     p.setTopicTitle(t.getTopicTitle());
                     p.setTopicInvite(t.getTopicInvite());
                     String tt = threadTitle;
-                    Intent intent = new Intent(getActivity(),PostActivity.class);
-                    intent.putExtra("post",p);
-                    intent.putExtra("tt",tt);
-                    intent.putExtra("threadCode",threadCode);
-                    Log.d("LocalFragment ","Sending topicInvite "+p.getTopicInvite());
+                    Intent intent = new Intent(getActivity(), PostActivity.class);
+                    intent.putExtra("post", p);
+                    intent.putExtra("tt", tt);
+                    intent.putExtra("threadCode", threadCode);
+                    Log.d("LocalFragment ", "Sending topicInvite " + p.getTopicInvite());
                     startActivity(intent);
                 }
             });
-
 
 
             return convertView;
@@ -379,7 +371,7 @@ public class LocalFragment extends Fragment {
     }
 
 
-    public class JoinThreadDialogFragment extends Dialog{
+    public class JoinThreadDialogFragment extends Dialog {
         EditText editText;
         ImageButton joinBtn;
         String tp;
@@ -420,28 +412,27 @@ public class LocalFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     //Toast.makeText(getActivity()," Clicked button, edit text is: "+editText.getText().toString(),Toast.LENGTH_SHORT).show();
-                    Log.d("LocalFragment"," Join button hit "+tp);
-                    if(editText.getText().toString().length()>2) {
+                    Log.d("LocalFragment", " Join button hit " + tp);
+                    if (editText.getText().toString().length() > 2) {
 
                         initFirebase();
-                    }
-                    else{
-                        Toast.makeText(getActivity()," Code invalid please, try again "+tp,Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity(), " Code invalid please, try again " + tp, Toast.LENGTH_SHORT).show();
                     }
 
                 }
             });
         }
 
-        public void initFirebase(){
-           threadRef.addValueEventListener(new ValueEventListener() {
+        public void initFirebase() {
+            threadRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
-                    if(dataSnapshot.child("Invites").child(tp).exists()){
+                    if (dataSnapshot.child("Invites").child(tp).exists()) {
                         //Start PostActivty
-                        Toast.makeText(getActivity()," Found code! ",Toast.LENGTH_SHORT).show();
-                        Log.d("LocalFragment","Found code! ready to start postActivity!");
+                        Toast.makeText(getActivity(), " Found code! ", Toast.LENGTH_SHORT).show();
+                        Log.d("LocalFragment", "Found code! ready to start postActivity!");
                         longVersion = dataSnapshot.child("Invites").child(tp).getValue(String.class);
                         String[] decoded = decodeLongVersion();
                         DataSnapshot topicPath = dataSnapshot.child("Threads").child(decoded[0]).child("topics").child(decoded[1]);
@@ -450,19 +441,18 @@ public class LocalFragment extends Fragment {
                         p.setTopicTitle(topicPath.child("topicTitle").getValue(String.class));
                         p.setTimeStamp(topicPath.child("timeStamp").getValue(Integer.class));
                         p.setReplies(topicPath.child("replies").getValue(Integer.class));
-                        p.setAnonCode((HashMap)topicPath.child("anonCode").getValue());
+                        p.setAnonCode((HashMap) topicPath.child("anonCode").getValue());
                         p.setHostUID(topicPath.child("UID").getValue(String.class));
                         p.setParent(topicPath.child("parent").getValue(String.class));
                         p.setPosition(topicPath.child("position").getValue(Integer.class));
-                        Intent i = new Intent(getActivity(),PostActivity.class);
-                        i.putExtra("post",p);
-                        i.putExtra("tt",threadTitle);
-                        i.putExtra("threadCode",threadCode);
+                        Intent i = new Intent(getActivity(), PostActivity.class);
+                        i.putExtra("post", p);
+                        i.putExtra("tt", threadTitle);
+                        i.putExtra("threadCode", threadCode);
                         startActivity(i);
-                    }
-                    else{
-                        Toast.makeText(getActivity()," Code invalid please, try again",Toast.LENGTH_SHORT).show();
-                        Log.d("LocalFragment"," Could not find code");
+                    } else {
+                        Toast.makeText(getActivity(), " Code invalid please, try again", Toast.LENGTH_SHORT).show();
+                        Log.d("LocalFragment", " Could not find code");
 
                     }
                 }
@@ -477,10 +467,10 @@ public class LocalFragment extends Fragment {
 
         }
 
-        public String[] decodeLongVersion(){
+        public String[] decodeLongVersion() {
             String[] parts = longVersion.split(">");
-            Log.d("decodingLongVersion","Part 1: "+parts[0]);
-            Log.d("decodingLongVersion","Part 2: "+parts[1]);
+            Log.d("decodingLongVersion", "Part 1: " + parts[0]);
+            Log.d("decodingLongVersion", "Part 2: " + parts[1]);
             return parts;
 
         }
