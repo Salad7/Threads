@@ -127,14 +127,14 @@ public class PostActivity extends AppCompatActivity {
                     alist.add(androidId);
                     HashMap map = new HashMap();
                     map.put("upvoters", alist);
-                    threadRef.child("Threads").child(threadCode).child("topics").updateChildren(map);
+                    threadRef.child("Threads").child(threadCode).child("topics").child("topicPosition").updateChildren(map);
                     upvoteCount.setText(1 + "");
                 } else if (!incomingPost.getUpvoters().contains(androidId)) {
                     ArrayList<String> alist = incomingPost.getUpvoters();
                     alist.add(androidId);
                     HashMap map = new HashMap();
                     map.put("upvoters", alist);
-                    threadRef.child("Threads").child(threadCode).child("topics").updateChildren(map);
+                    threadRef.child("Threads").child(threadCode).child("topics").child("topicPosition").updateChildren(map);
                     upvoteCount.setText(alist.size() + "");
                 }
             }
