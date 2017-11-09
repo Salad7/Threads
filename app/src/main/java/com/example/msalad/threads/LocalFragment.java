@@ -39,6 +39,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -72,6 +73,7 @@ public class LocalFragment extends Fragment {
     private ArrayList<String> notifyList;
     private TextView threadTitleTV;
     private String MY_PREFS_NAME = "MY_PREFS_NAME";
+    private String token = "";
 
 
     @Nullable
@@ -260,7 +262,8 @@ public class LocalFragment extends Fragment {
         topicsMap.put("upvotes", 0);
         topicsMap.put("topicTitle", title);
         ArrayList<String> notify = new ArrayList<>();
-        notify.add(androidId);
+        token = FirebaseInstanceId.getInstance().getToken();
+        notify.add(token);
         topicsMap.put("notifyList",notify);
         //Log.d("LocalFragment",ThreadFinder.getTimeStamp()+"");
         topicsMap.put("timeStamp", ThreadFinder.getTimeStamp());

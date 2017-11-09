@@ -28,6 +28,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ public class PostActivity extends AppCompatActivity {
     int messagePosition;
     MessageAdapter messageAdapter;
     String androidId;
-
+    String token;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +81,7 @@ public class PostActivity extends AppCompatActivity {
         upvoteCount = findViewById(R.id.post_upvotes);
         backBtn = findViewById(R.id.backBtn);
         shareBtn = findViewById(R.id.shareBtn);
+        token = FirebaseInstanceId.getInstance().getToken();
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -186,25 +188,32 @@ public class PostActivity extends AppCompatActivity {
     }
 
     public void queueNotifications(final String msg){
-        if(!notifyList.contains(androidId)){
-            notifyList.add(androidId);
+        if(!notifyList.contains(token)) {
+            notifyList.add(token);
             //Update firebase
             HashMap map = new HashMap();
-            map.put("notifyList",notifyList);
-            threadRef.child("Threads").child(threadCode).child("topics").child(topicPostion+"").updateChildren(map);
+            map.put("notifyList", notifyList);
+
+            threadRef.child("Threads").child(threadCode).child("topics").child(topicPostion + "").updateChildren(map);
+        }
             threadRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if(!dataSnapshot.child("Notify").exists()){
                         threadRef.child("Notify").child(0+"").child("message").setValue(msg);
                         threadRef.child("Notify").child(0+"").child("notifyList").setValue(notifyList);
+                        threadRef.child("Notify").child(0+"").child("threadTitle").setValue(getIntent().getStringExtra("tt"));
+
                     }
                     else{
                         for(int i = 0; i < ThreadFinder.MAX_NOTIFICATIONS; i++){
                             if(!dataSnapshot.child("Notify").child(i+"").exists()){
                                 threadRef.child("Notify").child(i+"").child("message").setValue(msg);
                                 threadRef.child("Notify").child(i+"").child("notifyList").setValue(notifyList);
+                                threadRef.child("Notify").child(i+"").child("threadTitle").setValue(getIntent().getStringExtra("tt"));
+
                                 i = ThreadFinder.MAX_NOTIFICATIONS+1;
+                                Log.d("PostActivity"," adding to Notify");
                             }
                         }
                     }
@@ -215,9 +224,10 @@ public class PostActivity extends AppCompatActivity {
 
                 }
             });
-        }
+
 
     }
+
 
     public void dismissKeyboard(AppCompatActivity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
