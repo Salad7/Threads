@@ -90,10 +90,100 @@ public class LocalFragment extends Fragment {
         thread = v.findViewById(R.id.threadBtn);
         notifyList = new ArrayList<>();
         thread.setOnClickListener(new View.OnClickListener() {
+            String tp = "";
             @Override
             public void onClick(View view) {
-                JoinThreadDialogFragment joinThreadDialogFragment = new JoinThreadDialogFragment(getActivity());
-                joinThreadDialogFragment.show();
+                //JoinThreadDialogFragment joinThreadDialogFragment = new JoinThreadDialogFragment(getActivity());
+                //joinThreadDialogFragment.show();
+
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+                alertDialog.setTitle("Invited to a thread? join below");
+
+                final EditText input = new EditText(getActivity());
+               // final Button button = new Button(getActivity());
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT);
+                input.setLayoutParams(lp);
+                input.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+                        tp = editable.toString();
+                    }
+                });
+                //button.setLayoutParams(lp);
+                alertDialog.setView(input);
+                //alertDialog.setView(button)
+
+                alertDialog.setPositiveButton("Join",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //Log.d("LocalFragment", " Join button hit " + tp);
+                                if (input.getText().toString().length() > 2) {
+                                    threadRef.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                            if (dataSnapshot.child("Invites").child(tp).exists()) {
+                                                //Start PostActivty
+                                                Toast.makeText(getActivity(), " Found code! ", Toast.LENGTH_SHORT).show();
+                                                Log.d("LocalFragment", "Found code! ready to start postActivity!");
+                                                String longVersion = dataSnapshot.child("Invites").child(tp).getValue(String.class);
+                                                String[] decoded = LocalFragment.decodeLongVersion(longVersion);
+                                                DataSnapshot topicPath = dataSnapshot.child("Threads").child(decoded[0]).child("topics").child(decoded[1]);
+                                                Post p = new Post();
+                                                p.setTopicInvite(topicPath.child("topicInvite").getValue(String.class));
+                                                p.setTopicTitle(topicPath.child("topicTitle").getValue(String.class));
+                                                p.setTimeStamp(topicPath.child("timeStamp").getValue(Integer.class));
+                                                p.setReplies(topicPath.child("replies").getValue(Integer.class));
+                                                p.setAnonCode((HashMap) topicPath.child("anonCode").getValue());
+                                                p.setHostUID(topicPath.child("UID").getValue(String.class));
+                                                p.setParent(topicPath.child("parent").getValue(String.class));
+                                                p.setPosition(topicPath.child("position").getValue(Integer.class));
+                                                Intent i = new Intent(getActivity(), PostActivity.class);
+                                                i.putExtra("post", p);
+                                                i.putExtra("tt", threadTitle);
+                                                i.putExtra("threadCode", threadCode);
+                                                ArrayList<String> tempNotifyList = new ArrayList<String>();
+                                                tempNotifyList =  (ArrayList<String>) topicPath.child("notifyList").getValue();
+                                                i.putExtra("notifyList",tempNotifyList);
+                                                startActivity(i);
+                                            } else {
+                                                Toast.makeText(getActivity(), " Code invalid please, try again", Toast.LENGTH_SHORT).show();
+                                                Log.d("LocalFragment", " Could not find code");
+
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+                                } else {
+                                    Toast.makeText(getActivity(), " Code invalid please, try again ", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
+                alertDialog.setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+
+                alertDialog.show();
             }
         });
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -164,6 +254,8 @@ public class LocalFragment extends Fragment {
         localFragmentItemAdapter.setNotifyOnChange(true);
         return v;
     }
+
+
 
     public void addFirebaseLocalThreads() {
         threadRef.addValueEventListener(new ValueEventListener() {
@@ -379,12 +471,20 @@ public class LocalFragment extends Fragment {
 
             return convertView;
         }
-    }
 
+
+    }
+    public static String[] decodeLongVersion(String longVersion) {
+        String[] parts = longVersion.split(">");
+        Log.d("decodingLongVersion", "Part 1: " + parts[0]);
+        Log.d("decodingLongVersion", "Part 2: " + parts[1]);
+        return parts;
+
+    }
 
     public class JoinThreadDialogFragment extends Dialog {
         EditText editText;
-        ImageButton joinBtn;
+        Button joinBtn;
         String tp;
         String tCode;
         String tPosition;
@@ -445,7 +545,7 @@ public class LocalFragment extends Fragment {
                         Toast.makeText(getActivity(), " Found code! ", Toast.LENGTH_SHORT).show();
                         Log.d("LocalFragment", "Found code! ready to start postActivity!");
                         longVersion = dataSnapshot.child("Invites").child(tp).getValue(String.class);
-                        String[] decoded = decodeLongVersion();
+                        String[] decoded = decodeLongVersion(longVersion);
                         DataSnapshot topicPath = dataSnapshot.child("Threads").child(decoded[0]).child("topics").child(decoded[1]);
                         Post p = new Post();
                         p.setTopicInvite(topicPath.child("topicInvite").getValue(String.class));
@@ -460,6 +560,7 @@ public class LocalFragment extends Fragment {
                         i.putExtra("post", p);
                         i.putExtra("tt", threadTitle);
                         i.putExtra("threadCode", threadCode);
+                        i.putExtra("notifyList",notifyList);
                         startActivity(i);
                     } else {
                         Toast.makeText(getActivity(), " Code invalid please, try again", Toast.LENGTH_SHORT).show();
@@ -478,7 +579,7 @@ public class LocalFragment extends Fragment {
 
         }
 
-        public String[] decodeLongVersion() {
+        public String[] decodeLongVersion(String longVersion) {
             String[] parts = longVersion.split(">");
             Log.d("decodingLongVersion", "Part 1: " + parts[0]);
             Log.d("decodingLongVersion", "Part 2: " + parts[1]);

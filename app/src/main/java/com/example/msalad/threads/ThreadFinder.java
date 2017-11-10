@@ -7,6 +7,8 @@ package com.example.msalad.threads;
 // Threads
   //      Anonymous group messaging app
 
+        import android.util.Log;
+
         import java.nio.channels.CompletionHandler;
         import java.util.ArrayList;
         import java.util.Calendar;
@@ -55,6 +57,7 @@ public class ThreadFinder{
                 la = mnp(la+0.0001);
                 //System.out.println(" Lat " + mnp(la) + " Lon " + mnp(lo));
                 ll.add(new LatLon(mnp(la),mnp(lo)));
+                Log.d("ThreadFinder",(lonPos+1)*(latPos+1)+"");
                 //System.out.println("La now "+mnp(la)+" run throughs "+mnp(latPos));
             }
             la = resetVal;
