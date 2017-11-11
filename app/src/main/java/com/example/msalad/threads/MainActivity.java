@@ -87,7 +87,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         NewtonCradleLoading newtonCradleLoading; newtonCradleLoading = (NewtonCradleLoading)findViewById(R.id.newton_cradle_loading);
         newtonCradleLoading.setLoadingColor(R.color.colorPrimaryDark);
         newtonCradleLoading.start();
+        if (getIntent().getExtras() != null) {
 
+        }
         //Date d = new Date();
         //Calendar c
         //Log.d("time in millis",d.getTime()/1000+"");
