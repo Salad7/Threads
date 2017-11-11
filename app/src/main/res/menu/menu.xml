@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/fab_link"
+        android:icon="@drawable/join"
+        android:title="Join thread by invite" />
+
+    <item
+        android:id="@+id/fab_add"
+        android:icon="@drawable/needle2"
+        android:title="Post new thread" />
+    <item
+        android:id="@+id/fab_resync"
+        android:icon="@drawable/refresh"
+        android:title="Refresh location"/>
+</menu>

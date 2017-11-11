@@ -19,6 +19,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -33,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.github.ag.floatingactionmenu.OptionsFabLayout;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -53,6 +55,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.example.msalad.threads.R.attr.icon;
 
 /**
  * Created by cci-loaner on 10/23/17.
@@ -63,8 +66,7 @@ public class LocalFragment extends Fragment {
     ListView listView;
     LocalFragmentItemAdapter localFragmentItemAdapter;
     List<Topics> topics;
-    FloatingActionButton post;
-    FloatingActionButton thread;
+
     private FirebaseDatabase database;
     private DatabaseReference threadRef;
     public String threadCode;
@@ -72,8 +74,10 @@ public class LocalFragment extends Fragment {
     private int openSpotInFirebase = 0;
     private ArrayList<String> notifyList;
     private TextView threadTitleTV;
+    OptionsFabLayout fabWithOptions;
     private String MY_PREFS_NAME = "MY_PREFS_NAME";
     private String token = "";
+    String tp;
 
 
     @Nullable
@@ -85,107 +89,10 @@ public class LocalFragment extends Fragment {
         threadRef = database.getReference();
         SharedPreferences prefs = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
         threadCode = prefs.getString("threadCode", "8080");//"No name defined" is the default value.
-        post = v.findViewById(R.id.postBtn);
         listView = v.findViewById(R.id.local_list);
-        thread = v.findViewById(R.id.threadBtn);
         notifyList = new ArrayList<>();
-        thread.setOnClickListener(new View.OnClickListener() {
-            String tp = "";
-            @Override
-            public void onClick(View view) {
-                //JoinThreadDialogFragment joinThreadDialogFragment = new JoinThreadDialogFragment(getActivity());
-                //joinThreadDialogFragment.show();
 
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
-                alertDialog.setTitle("Invited to a thread? join below");
 
-                final EditText input = new EditText(getActivity());
-               // final Button button = new Button(getActivity());
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.MATCH_PARENT);
-                input.setLayoutParams(lp);
-                input.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable editable) {
-                        tp = editable.toString();
-                    }
-                });
-                //button.setLayoutParams(lp);
-                alertDialog.setView(input);
-                //alertDialog.setView(button)
-
-                alertDialog.setPositiveButton("Join",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                //Log.d("LocalFragment", " Join button hit " + tp);
-                                if (input.getText().toString().length() > 2) {
-                                    threadRef.addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-
-                                            if (dataSnapshot.child("Invites").child(tp).exists()) {
-                                                //Start PostActivty
-                                                Toast.makeText(getActivity(), " Found code! ", Toast.LENGTH_SHORT).show();
-                                                Log.d("LocalFragment", "Found code! ready to start postActivity!");
-                                                String longVersion = dataSnapshot.child("Invites").child(tp).getValue(String.class);
-                                                String[] decoded = LocalFragment.decodeLongVersion(longVersion);
-                                                DataSnapshot topicPath = dataSnapshot.child("Threads").child(decoded[0]).child("topics").child(decoded[1]);
-                                                Post p = new Post();
-                                                p.setTopicInvite(topicPath.child("topicInvite").getValue(String.class));
-                                                p.setTopicTitle(topicPath.child("topicTitle").getValue(String.class));
-                                                p.setTimeStamp(topicPath.child("timeStamp").getValue(Integer.class));
-                                                p.setReplies(topicPath.child("replies").getValue(Integer.class));
-                                                p.setAnonCode((HashMap) topicPath.child("anonCode").getValue());
-                                                p.setHostUID(topicPath.child("UID").getValue(String.class));
-                                                p.setParent(topicPath.child("parent").getValue(String.class));
-                                                p.setPosition(topicPath.child("position").getValue(Integer.class));
-                                                Intent i = new Intent(getActivity(), PostActivity.class);
-                                                i.putExtra("post", p);
-                                                i.putExtra("tt", threadTitle);
-                                                i.putExtra("threadCode", threadCode);
-                                                ArrayList<String> tempNotifyList = new ArrayList<String>();
-                                                tempNotifyList =  (ArrayList<String>) topicPath.child("notifyList").getValue();
-                                                i.putExtra("notifyList",tempNotifyList);
-                                                startActivity(i);
-                                            } else {
-                                                Toast.makeText(getActivity(), " Code invalid please, try again", Toast.LENGTH_SHORT).show();
-                                                Log.d("LocalFragment", " Could not find code");
-
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
-
-                                        }
-                                    });
-                                } else {
-                                    Toast.makeText(getActivity(), " Code invalid please, try again ", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-
-                alertDialog.setNegativeButton("Cancel",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
-
-                alertDialog.show();
-            }
-        });
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -215,43 +122,160 @@ public class LocalFragment extends Fragment {
         listView.setAdapter(localFragmentItemAdapter);
 
         addFirebaseLocalThreads();
-        post.setOnClickListener(new View.OnClickListener() {
+
+        localFragmentItemAdapter.setNotifyOnChange(true);
+        fabWithOptions = (OptionsFabLayout) v.findViewById(R.id.fab_l);
+
+//Set main fab clicklistener.
+        fabWithOptions.setMainFabOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
-                alertDialog.setTitle("Create a topic");
-
-                final EditText input = new EditText(getActivity());
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.MATCH_PARENT);
-                input.setLayoutParams(lp);
-                alertDialog.setView(input);
-
-                alertDialog.setPositiveButton("Create",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                String topic = input.getText().toString();
-                                if (topic.length() > 0) {
-                                    Toast.makeText(getActivity(),
-                                            "Topic created!", Toast.LENGTH_SHORT).show();
-                                    createTopic(topic);
-                                }
-                            }
-                        });
-
-                alertDialog.setNegativeButton("Cancel",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
-
-                alertDialog.show();
-
+            public void onClick(View view) {
+                //Toast.makeText(getActivity(), "Main fab clicked!", Toast.LENGTH_SHORT).show();
             }
         });
-        localFragmentItemAdapter.setNotifyOnChange(true);
+
+        //Set mini fabs clicklisteners.
+        fabWithOptions.setMiniFabSelectedListener(new OptionsFabLayout.OnMiniFabSelectedListener() {
+            @Override
+            public void onMiniFabSelected(MenuItem fabItem) {
+                switch (fabItem.getItemId()) {
+                    case R.id.fab_add:
+                        Toast.makeText(
+                                getActivity(),
+                                fabItem.getTitle() + " clicked!",
+                                Toast.LENGTH_SHORT).show();
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+                        alertDialog.setTitle("Create a topic");
+
+                        final EditText input = new EditText(getActivity());
+                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.MATCH_PARENT);
+                        input.setLayoutParams(lp);
+                        alertDialog.setView(input);
+
+                        alertDialog.setPositiveButton("Create",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        String topic = input.getText().toString();
+                                        if (topic.length() > 0) {
+                                            Toast.makeText(getActivity(),
+                                                    "Topic created!", Toast.LENGTH_SHORT).show();
+                                            createTopic(topic);
+                                        }
+                                    }
+                                });
+
+                        alertDialog.setNegativeButton("Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                });
+
+                        alertDialog.show();
+                        break;
+                    case R.id.fab_link:
+                        Toast.makeText(getActivity(),
+                                fabItem.getTitle() + "clicked!",
+                                Toast.LENGTH_SHORT).show();
+                        AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(getActivity());
+                        alertDialog2.setTitle("Invited to a thread? join below");
+
+                        final EditText input2 = new EditText(getActivity());
+                        // final Button button = new Button(getActivity());
+                        LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.MATCH_PARENT);
+                        input2.setLayoutParams(lp2);
+                        input2.addTextChangedListener(new TextWatcher() {
+                            @Override
+                            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                            }
+
+                            @Override
+                            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                            }
+
+                            @Override
+                            public void afterTextChanged(Editable editable) {
+                                tp = editable.toString();
+                            }
+                        });
+                        //button.setLayoutParams(lp);
+                        alertDialog2.setView(input2);
+                        //alertDialog.setView(button)
+
+                        alertDialog2.setPositiveButton("Join",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //Log.d("LocalFragment", " Join button hit " + tp);
+                                        if (input2.getText().toString().length() > 2) {
+                                            threadRef.addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                                    if (dataSnapshot.child("Invites").child(tp).exists()) {
+                                                        //Start PostActivty
+                                                        Toast.makeText(getActivity(), " Found code! ", Toast.LENGTH_SHORT).show();
+                                                        Log.d("LocalFragment", "Found code! ready to start postActivity!");
+                                                        String longVersion = dataSnapshot.child("Invites").child(tp).getValue(String.class);
+                                                        String[] decoded = LocalFragment.decodeLongVersion(longVersion);
+                                                        DataSnapshot topicPath = dataSnapshot.child("Threads").child(decoded[0]).child("topics").child(decoded[1]);
+                                                        Post p = new Post();
+                                                        p.setTopicInvite(topicPath.child("topicInvite").getValue(String.class));
+                                                        p.setTopicTitle(topicPath.child("topicTitle").getValue(String.class));
+                                                        p.setTimeStamp(topicPath.child("timeStamp").getValue(Integer.class));
+                                                        p.setReplies(topicPath.child("replies").getValue(Integer.class));
+                                                        p.setAnonCode((HashMap) topicPath.child("anonCode").getValue());
+                                                        p.setHostUID(topicPath.child("UID").getValue(String.class));
+                                                        p.setParent(topicPath.child("parent").getValue(String.class));
+                                                        p.setPosition(topicPath.child("position").getValue(Integer.class));
+                                                        Intent i = new Intent(getActivity(), PostActivity.class);
+                                                        i.putExtra("post", p);
+                                                        i.putExtra("tt", threadTitle);
+                                                        i.putExtra("threadCode", threadCode);
+                                                        ArrayList<String> tempNotifyList = new ArrayList<String>();
+                                                        tempNotifyList =  (ArrayList<String>) topicPath.child("notifyList").getValue();
+                                                        i.putExtra("notifyList",tempNotifyList);
+                                                        startActivity(i);
+                                                    } else {
+                                                        Toast.makeText(getActivity(), " Code invalid please, try again", Toast.LENGTH_SHORT).show();
+                                                        Log.d("LocalFragment", " Could not find code");
+
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
+
+                                                }
+                                            });
+                                        } else {
+                                            Toast.makeText(getActivity(), " Code invalid please, try again ", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+
+                        alertDialog2.setNegativeButton("Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                });
+
+                        alertDialog2.show();
+                        break;
+                    case R.id.fab_resync:
+                        Intent i = new Intent(getActivity(),MainActivity.class);
+                        startActivity(i);
+                    default:
+                        break;
+                }
+            }
+        });
         return v;
     }
 
