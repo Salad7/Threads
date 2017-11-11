@@ -579,6 +579,13 @@ public class LocalFragment extends Fragment {
 
         }
 
+        @Override
+        public void onBackPressed() {
+            super.onBackPressed();
+            Intent i = new Intent(getActivity(),MainActivity.class);
+            startActivity(i);
+        }
+
         public String[] decodeLongVersion(String longVersion) {
             String[] parts = longVersion.split(">");
             Log.d("decodingLongVersion", "Part 1: " + parts[0]);

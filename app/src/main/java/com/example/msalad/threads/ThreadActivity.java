@@ -1,5 +1,6 @@
 package com.example.msalad.threads;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -51,6 +52,8 @@ public class ThreadActivity extends AppCompatActivity {
 //        tabHost.addTab(tabHost.newTabSpec("Same Room").setIndicator("Same Room"),LocalFragment.class,null);
 //        tabHost.addTab(tabHost.newTabSpec("Settings").setIndicator("Settings"),SettingsFragment.class,null);
         setUpTablayout();
+  //      ActionBar actionBar = getActionBar();
+//        actionBar.setDisplayHomeAsUpEnabled(true);
 
     }
 

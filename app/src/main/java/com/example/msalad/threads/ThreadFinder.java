@@ -51,10 +51,10 @@ public class ThreadFinder{
         double resetVal = la;
         System.out.println("Lat start " + la);
         System.out.println("Lon start " + lo);
-        for(double lonPos = 0; lonPos <= 200; lonPos+=1){
-            lo = mnp(lo+0.0001);
-            for(double latPos = 0; latPos <= 200; latPos+=1){
-                la = mnp(la+0.0001);
+        for(double lonPos = 0; lonPos <= 10; lonPos+=1){
+            lo = mnp(lo+0.00001);
+            for(double latPos = 0; latPos <= 10; latPos+=1){
+                la = mnp(la+0.00001);
                 //System.out.println(" Lat " + mnp(la) + " Lon " + mnp(lo));
                 ll.add(new LatLon(mnp(la),mnp(lo)));
                 Log.d("ThreadFinder",(lonPos+1)*(latPos+1)+"");

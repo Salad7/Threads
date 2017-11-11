@@ -24,6 +24,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -171,6 +172,29 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
     }
+
+    public void dropPins(){
+        for(int n = 0; n < coors_near_me.size(); n++){
+            //if(n%10 == 0) {
+                mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(coors_near_me.get(n).lat, coors_near_me.get(n).lon))
+                        .title("Graph"));
+            //}
+
+        }
+//        mMap.addMarker(new MarkerOptions()
+//                .position(new LatLng(coors_near_me.get(0).lat, coors_near_me.get(0).lon))
+//                .title("Quad 3 "+coors_near_me.get(0).lat + " " +coors_near_me.get(0).lon));
+//        mMap.addMarker(new MarkerOptions()
+//                .position(new LatLng(coors_near_me.get(100).lat, coors_near_me.get(0).lon))
+//                .title("Quad 2 "+coors_near_me.get(100).lat + " " +coors_near_me.get(0).lon));
+//        mMap.addMarker(new MarkerOptions()
+//                .position(new LatLng(coors_near_me.get(0).lat, coors_near_me.get(100).lon))
+//                .title("Quad 4 "+coors_near_me.get(0).lat + " " +coors_near_me.get(100).lon));
+//        mMap.addMarker(new MarkerOptions()
+//                .position(new LatLng(coors_near_me.get(199).lat, coors_near_me.get(199).lon))
+//                .title("Quad 1 "+coors_near_me.get(199).lat + " " +coors_near_me.get(199).lon));
+    }
     private void createThread(){
         Double lat = convertDouble(mLastKnownLocation.getLatitude());
         Double lon =  convertDouble(mLastKnownLocation.getLongitude());
@@ -268,8 +292,15 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                         }
                         //Toast.makeText(getApplicationContext(),mLastKnownLocation.getLongitude() + " " + mLastKnownLocation.getLatitude(),Toast.LENGTH_SHORT).show();
                         Log.d("MainActivity ",mLastKnownLocation.getLatitude()+" "+mLastKnownLocation.getLongitude());
-                        coors_near_me =  ThreadFinder.runSimulationQuad2(convertDouble(mLastKnownLocation.getLatitude())-.0050,convertDouble(mLastKnownLocation.getLongitude())-.0050,MainActivity.this);
+
+
+
+                        coors_near_me =  ThreadFinder.runSimulationQuad2(convertDouble(mLastKnownLocation.getLatitude())-.00005,convertDouble(mLastKnownLocation.getLongitude())-.00005,MainActivity.this);
                         //searchIfThreadExistsInFirebase();
+                        mMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()))
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE))
+                                .title("Graph"));
 
 
                     }
@@ -354,6 +385,11 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                         String[] pos2 = (lon + "").split("\\.");
                         String testKey = pos1[0] + "!" + pos1[1] + "*" + pos2[0] + "!" + pos2[1];
                         if (dataSnapshot.child("Threads").child(testKey).exists()) {
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(new LatLng(lat, lon))
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                                    .title("Graph"));
+
                             startThread(i,testKey,dataSnapshot);
                             i = coors_near_me.size()+1;
                             isFound = true;
@@ -363,6 +399,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                         Log.d("MainActivity"," createThread called");
                         createThread();
                     }
+                Toast.makeText(MainActivity.this,"Done parsing.",Toast.LENGTH_SHORT).show();
+                    dropPins();
 
                 }
 
