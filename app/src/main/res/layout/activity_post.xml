@@ -107,11 +107,11 @@
                 android:id="@+id/shareBtn"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
-                android:layout_marginRight="24dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/unlink"
                 android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true" />
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="8dp"
+                android:layout_marginRight="24dp"
+                android:background="@drawable/share" />
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>

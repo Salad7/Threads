@@ -388,10 +388,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         //Log.d("MainActivity ", "convertDouble before "+l);
         int index = la.indexOf('.');
 
-        for(int i = 0; i < index+5; i++){
+        for(int i = 0; i < index+6; i++){
             la2+=la.charAt(i);
         }
-        //Log.d("MainActivity ", "convertDouble after "+la2);
+        Log.d("MainActivity ", "convertDouble after "+la2);
         return Double.parseDouble(la2);
 
 

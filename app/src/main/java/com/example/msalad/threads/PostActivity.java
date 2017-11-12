@@ -246,6 +246,11 @@ public class PostActivity extends AppCompatActivity {
             requestPermissions(new String[]{android.Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
             //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
         }
+        else{
+            Intent i = new Intent(PostActivity.this,ShareContactsActivity.class);
+            i.putExtra("invite",incomingPost.getTopicInvite());
+            startActivity(i);
+        }
     }
 
     public void dismissKeyboard(AppCompatActivity activity) {
