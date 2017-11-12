@@ -140,10 +140,6 @@ public class LocalFragment extends Fragment {
             public void onMiniFabSelected(MenuItem fabItem) {
                 switch (fabItem.getItemId()) {
                     case R.id.fab_add:
-                        Toast.makeText(
-                                getActivity(),
-                                fabItem.getTitle() + " clicked!",
-                                Toast.LENGTH_SHORT).show();
                         AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
                         alertDialog.setTitle("Create a topic");
 
@@ -242,8 +238,8 @@ public class LocalFragment extends Fragment {
                                                         i.putExtra("notifyList",tempNotifyList);
                                                         startActivity(i);
                                                     } else {
-                                                        Toast.makeText(getActivity(), " Code invalid please, try again", Toast.LENGTH_SHORT).show();
-                                                        Log.d("LocalFragment", " Could not find code");
+                                                        //Toast.makeText(getActivity(), " Code invalid please, try again", Toast.LENGTH_SHORT).show();
+                                                       // Log.d("LocalFragment", " Could not find code");
 
                                                     }
                                                 }
@@ -254,7 +250,7 @@ public class LocalFragment extends Fragment {
                                                 }
                                             });
                                         } else {
-                                            Toast.makeText(getActivity(), " Code invalid please, try again ", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getActivity(), " Please enter more than 2 characters, try again ", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 });
@@ -552,7 +548,7 @@ public class LocalFragment extends Fragment {
 
                         initFirebase();
                     } else {
-                        Toast.makeText(getActivity(), " Code invalid please, try again " + tp, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), " Enter more than characters please " + tp, Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -587,7 +583,7 @@ public class LocalFragment extends Fragment {
                         i.putExtra("notifyList",notifyList);
                         startActivity(i);
                     } else {
-                        Toast.makeText(getActivity(), " Code invalid please, try again", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), " Code is invalid, please, try again", Toast.LENGTH_SHORT).show();
                         Log.d("LocalFragment", " Could not find code");
 
                     }

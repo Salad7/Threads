@@ -443,7 +443,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                         Log.d("MainActivity"," createThread called");
                         createThread();
                     }
-                Toast.makeText(MainActivity.this,"Done parsing.",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this,"Done parsing.",Toast.LENGTH_SHORT).show();
                     dropPins();
 
                 }

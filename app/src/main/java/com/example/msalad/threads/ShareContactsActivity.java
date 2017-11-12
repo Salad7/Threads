@@ -46,6 +46,7 @@ public class ShareContactsActivity extends AppCompatActivity {
     private static final int MY_PERMISSIONS_REQUEST_SEND_SMS =0 ;
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     private Button shareBtn;
+    private Button cancelBtn;
     private String inviteCode;
     ListView mContactsList;
     ArrayList<Contact> contacts;
@@ -65,6 +66,7 @@ public class ShareContactsActivity extends AppCompatActivity {
             //startActivity(i);
         }
         inviteCode = getIntent().getStringExtra("invite");
+        cancelBtn = findViewById(R.id.cancel);
         mContactsList =
                 findViewById(R.id.contacts_list);
         contacts = new ArrayList<>();
@@ -84,6 +86,12 @@ public class ShareContactsActivity extends AppCompatActivity {
                     }
                 }
                 sendSMSMessage();
+            }
+        });
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
     }

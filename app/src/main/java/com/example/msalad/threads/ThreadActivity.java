@@ -94,7 +94,7 @@ public class ThreadActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 mViewPager.setCurrentItem(tab.getPosition());
                 if(tab.getPosition() == 0 || tab.getPosition() == 1){
-                    tabLayout.setSelectedTabIndicatorColor(Color.BLUE);
+                    tabLayout.setSelectedTabIndicatorColor(Color.parseColor("#448aff"));
                 }
                 else{
                     tabLayout.setSelectedTabIndicatorColor(Color.TRANSPARENT);

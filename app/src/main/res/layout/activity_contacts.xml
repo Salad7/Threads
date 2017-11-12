@@ -8,15 +8,28 @@
         android:id="@+id/contacts_list"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_above="@+id/shareWithFriends"
+        android:visibility="visible"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/shareWithFriends" />
+
+    <Button
+
+        android:id="@+id/cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="cANCEL"
+        android:layout_alignParentStart="true"
+
+        />
 
     <Button
         android:id="@+id/shareWithFriends"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:text="Send and Share" />
+        android:text="Send and Share"
+        android:layout_above="@+id/cancel" />
+
+
 </RelativeLayout>
