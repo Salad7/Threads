@@ -59,6 +59,7 @@
         </activity>
         <activity
             android:name=".CreateThread"
+            android:windowSoftInputMode="stateVisible"
             android:label="@string/title_activity_maps">
         </activity>
         <activity

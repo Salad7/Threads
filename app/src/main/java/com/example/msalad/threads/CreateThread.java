@@ -33,7 +33,7 @@ public class CreateThread extends AppCompatActivity {
     private DatabaseReference threadRef;
     private FirebaseDatabase database;
     private String threadCode;
-    private String threadTitle;
+    private String threadTitle = "";
     private String MY_PREFS_NAME = "MY_PREFS_NAME";
 
     @Override
@@ -45,6 +45,7 @@ public class CreateThread extends AppCompatActivity {
 
         cThread = findViewById(R.id.createThreadBtn);
         tThread = findViewById(R.id.threadTitle);
+        tThread.setCursorVisible(true);
         cThread.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
