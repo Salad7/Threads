@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -84,10 +85,59 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FirebaseApp.initializeApp(this);
+        database = FirebaseDatabase.getInstance();
+        threadRef = database.getReference();
         NewtonCradleLoading newtonCradleLoading; newtonCradleLoading = (NewtonCradleLoading)findViewById(R.id.newton_cradle_loading);
         newtonCradleLoading.setLoadingColor(R.color.colorPrimaryDark);
         newtonCradleLoading.start();
         if (getIntent().getExtras() != null) {
+            threadRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String tc = getIntent().getStringExtra("threadCode");
+                    String topicPosition = getIntent().getStringExtra("topicPosition");
+                    String threadTitle = getIntent().getStringExtra("threadTitle");
+                    Topics topic = new Topics();
+                    DataSnapshot specificThreadPath = dataSnapshot.child("Threads").child(tc).child("topics").child(topicPosition);
+                    topic.setTopicTitle(specificThreadPath.child("topicTitle").getValue(String.class));
+                    topic.setAnonCode((Map) specificThreadPath.child("anonCode").getValue());
+                    topic.setTimeStamp(specificThreadPath.child("timeStamp").getValue(Integer.class));
+                    topic.setHostUID(specificThreadPath.child("UID").getValue(String.class));
+                    topic.setPosition(Integer.parseInt(topicPosition));
+                    topic.setUpvoters((ArrayList) specificThreadPath.child("upvoters").getValue());
+                    topic.setParent(specificThreadPath.child("parent").getValue(String.class));
+                    topic.setReplies(specificThreadPath.child("replies").getValue(Integer.class));
+                    topic.setTopicInvite(specificThreadPath.child("topicInvite").getValue(String.class));
+                    topic.setNotifyList((ArrayList) specificThreadPath.child("notifyList").getValue());
+                    if (specificThreadPath.child("messages").exists()) {
+                        topic.setMessages((ArrayList) specificThreadPath.child("messages").getValue());
+                    }
+                    Log.d("MainActivity Topic","threadCode "+tc+" Topic position "+topicPosition);
+                    Post p = new Post();
+                    p.setUpvoters(topic.getUpvoters());
+                    p.setParent(topic.getParent());
+                    p.setPosition(topic.getPosition());
+                    p.setAnonCode(topic.getAnonCode());
+                    p.setHostUID(topic.getHostUID());
+                    p.setMessages(topic.getMessages());
+                    p.setReplies(topic.getReplies());
+                    p.setTimeStamp(topic.getTimeStamp());
+                    p.setTopicTitle(topic.getTopicTitle());
+                    p.setTopicInvite(topic.getTopicInvite());
+                    Intent intent = new Intent(MainActivity.this, PostActivity.class);
+                    intent.putExtra("post", p);
+                    intent.putExtra("tt", threadTitle);
+                    intent.putExtra("threadCode",tc);
+                    intent.putExtra("notifyList", topic.getNotifyList());
+                    startActivity(intent);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
 
         }
         //Date d = new Date();
@@ -107,8 +157,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 //                .findFragmentById(R.id.map);
 //        mapFragment.getMapAsync(this);
         //for(int i = 0; i < 15; i)
-        database = FirebaseDatabase.getInstance();
-        threadRef = database.getReference();
+
         //printNearLocs();
 
 

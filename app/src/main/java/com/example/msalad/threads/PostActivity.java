@@ -203,6 +203,10 @@ public class PostActivity extends AppCompatActivity {
                         threadRef.child("Notify").child(0+"").child("message").setValue(msg);
                         threadRef.child("Notify").child(0+"").child("notifyList").setValue(notifyList);
                         threadRef.child("Notify").child(0+"").child("threadTitle").setValue(getIntent().getStringExtra("tt"));
+                        threadRef.child("Notify").child(0+"").child("topicPosition").setValue(topicPostion);
+                        threadRef.child("Notify").child(0+"").child("threadCode").setValue(threadCode);
+
+
 
                     }
                     else{
@@ -211,7 +215,8 @@ public class PostActivity extends AppCompatActivity {
                                 threadRef.child("Notify").child(i+"").child("message").setValue(msg);
                                 threadRef.child("Notify").child(i+"").child("notifyList").setValue(notifyList);
                                 threadRef.child("Notify").child(i+"").child("threadTitle").setValue(getIntent().getStringExtra("tt"));
-
+                                threadRef.child("Notify").child(i+"").child("topicPosition").setValue(topicPostion);
+                                threadRef.child("Notify").child(i+"").child("threadCode").setValue(threadCode);
                                 i = ThreadFinder.MAX_NOTIFICATIONS+1;
                                 Log.d("PostActivity"," adding to Notify");
                             }
