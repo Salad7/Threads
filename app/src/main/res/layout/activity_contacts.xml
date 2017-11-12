@@ -9,27 +9,67 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:visibility="visible"
-        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_above="@+id/shareWithFriends" />
-
-    <Button
-
-        android:id="@+id/cancel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:text="cANCEL"
         android:layout_alignParentStart="true"
+        android:layout_above="@+id/linearLayout6" />
 
-        />
-
-    <Button
-        android:id="@+id/shareWithFriends"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Send and Share"
-        android:layout_above="@+id/cancel" />
+        android:gravity="bottom"
+        android:orientation="vertical"
+        android:background="@color/colorPrimary"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/linearLayout6">
+
+        <EditText
+            android:id="@+id/msgET"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/shareWithFriends"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:ems="10"
+            android:layout_marginTop="8dp"
+            android:hint="Enter message"
+            android:inputType="textPersonName"
+            android:shadowColor="#ffffff"
+            android:textColor="#ffffff"
+            android:textColorHighlight="#ffffff"
+            android:textColorHint="#ffffff"
+            android:textColorLink="#ffffff" />
+
+        <Button
+            android:id="@+id/shareWithFriends"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/cancel"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/edittextborder"
+            android:text="Send"
+            android:textColor="#ffffff" />
+
+        <Button
+
+            android:id="@+id/cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/edittextborder"
+            android:text="cANCEL"
+            android:textColor="#ffffff"
+
+            />
+    </LinearLayout>
 
 
 </RelativeLayout>

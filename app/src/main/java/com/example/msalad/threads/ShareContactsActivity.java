@@ -17,6 +17,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.provider.ContactsContract;
 import android.telephony.SmsManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +27,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -51,6 +54,8 @@ public class ShareContactsActivity extends AppCompatActivity {
     ListView mContactsList;
     ArrayList<Contact> contacts;
     ArrayList<String> recipients;
+    private EditText msgET;
+    String msg;
     CustomContactsAdapter customContactsAdapter;
 
 
@@ -77,6 +82,7 @@ public class ShareContactsActivity extends AppCompatActivity {
         customContactsAdapter.setNotifyOnChange(true);
         mContactsList.setAdapter(customContactsAdapter);
         recipients = new ArrayList<>();
+        msgET = findViewById(R.id.msgET);
         shareBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,6 +98,22 @@ public class ShareContactsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
+            }
+        });
+        msgET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                msg = editable.toString();
             }
         });
     }
@@ -157,11 +179,19 @@ public class ShareContactsActivity extends AppCompatActivity {
         else{
             SmsManager smsManager = SmsManager.getDefault();
             Log.d("ShareContactsActivity","sendSMSMessage size "+recipients.size());
-            for(int i = 0; i < recipients.size(); i++) {
-                smsManager.sendTextMessage(recipients.get(i), null, "Check out this post on Threads code : "+inviteCode, null, null);
-                Toast.makeText(getApplicationContext(), "SMS sent.",
-                        Toast.LENGTH_LONG).show();
-                finish();
+            if(msg == null || msg.equals("")){
+                Toast.makeText(ShareContactsActivity.this,"Enter a message",Toast.LENGTH_SHORT).show();
+            }
+            else if(recipients.size() == 0){
+                Toast.makeText(this,"Please enter atleast one recipent",Toast.LENGTH_SHORT).show();
+            }
+            else {
+                for (int i = 0; i < recipients.size(); i++) {
+                    smsManager.sendTextMessage(recipients.get(i), null, msg + ". Invite token:  " + inviteCode, null, null);
+                    Toast.makeText(getApplicationContext(), "SMS sent.",
+                            Toast.LENGTH_LONG).show();
+                    finish();
+                }
             }
         }
     }
@@ -223,7 +253,7 @@ public class ShareContactsActivity extends AppCompatActivity {
             name.setText(contacts.get(position).getName());
             phone.setText(contacts.get(position).getPhone());
             TextDrawable drawable = TextDrawable.builder()
-                    .buildRound(contacts.get(position).getIcon(),Color.parseColor("#3F51B5"));
+                    .buildRound(contacts.get(position).getIcon(),Color.parseColor("#3f76d2"));
             icon.setImageDrawable(drawable);
 
             checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
