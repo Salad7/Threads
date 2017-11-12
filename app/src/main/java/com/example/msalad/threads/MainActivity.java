@@ -39,6 +39,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.victor.loading.newton.NewtonCradleLoading;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -73,7 +74,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     // location retrieved by the Fused Location Provider.
     private Location mLastKnownLocation;
     boolean isFound = false;
-
+    private AVLoadingIndicatorView avLoadingIndicatorView;
     // Keys for storing activity state.
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
@@ -90,6 +91,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         NewtonCradleLoading newtonCradleLoading; newtonCradleLoading = (NewtonCradleLoading)findViewById(R.id.newton_cradle_loading);
         newtonCradleLoading.setLoadingColor(R.color.colorPrimaryDark);
         newtonCradleLoading.start();
+        avLoadingIndicatorView = findViewById(R.id.avi);
+        avLoadingIndicatorView.show();
         if (getIntent().getExtras() != null) {
             threadRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -233,18 +236,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             //}
 
         }
-//        mMap.addMarker(new MarkerOptions()
-//                .position(new LatLng(coors_near_me.get(0).lat, coors_near_me.get(0).lon))
-//                .title("Quad 3 "+coors_near_me.get(0).lat + " " +coors_near_me.get(0).lon));
-//        mMap.addMarker(new MarkerOptions()
-//                .position(new LatLng(coors_near_me.get(100).lat, coors_near_me.get(0).lon))
-//                .title("Quad 2 "+coors_near_me.get(100).lat + " " +coors_near_me.get(0).lon));
-//        mMap.addMarker(new MarkerOptions()
-//                .position(new LatLng(coors_near_me.get(0).lat, coors_near_me.get(100).lon))
-//                .title("Quad 4 "+coors_near_me.get(0).lat + " " +coors_near_me.get(100).lon));
-//        mMap.addMarker(new MarkerOptions()
-//                .position(new LatLng(coors_near_me.get(199).lat, coors_near_me.get(199).lon))
-//                .title("Quad 1 "+coors_near_me.get(199).lat + " " +coors_near_me.get(199).lon));
     }
     private void createThread(){
         Double lat = convertDouble(mLastKnownLocation.getLatitude());
@@ -288,6 +279,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     mLocationPermissionGranted = true;
+                    Intent i = new Intent(this,MainActivity.class);
+                    startActivity(i);
                 }
             }
         }

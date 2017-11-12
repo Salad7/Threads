@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
         android:id="@+id/textView3"
@@ -15,9 +17,10 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="69dp" />
     <fragment
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:id="@+id/map11"
+
         android:name="com.google.android.gms.maps.SupportMapFragment"/>
 
     <com.victor.loading.newton.NewtonCradleLoading
@@ -27,4 +30,13 @@
         android:visibility="gone"
         android:layout_height="150dp"/>
 
+
+    <com.wang.avi.AVLoadingIndicatorView
+        android:layout_width="100dp"
+        android:id="@+id/avi"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true"
+        app:indicatorColor="#ffffff"
+        app:indicatorName="BallPulseIndicator"
+        />
 </RelativeLayout>

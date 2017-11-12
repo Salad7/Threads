@@ -160,14 +160,6 @@ public class ShareContactsActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST_READ_CONTACTS) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission is granted
-                showContacts();
-            } else {
-                Toast.makeText(this, "Until you grant the permission, we cannot display the names", Toast.LENGTH_SHORT).show();
-            }
-        }
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_SEND_SMS: {
                 if (grantResults.length > 0
@@ -223,7 +215,7 @@ public class ShareContactsActivity extends AppCompatActivity {
             name.setText(contacts.get(position).getName());
             phone.setText(contacts.get(position).getPhone());
             TextDrawable drawable = TextDrawable.builder()
-                    .buildRound(contacts.get(position).getIcon(), Color.BLUE);
+                    .buildRound(contacts.get(position).getIcon(),Color.parseColor("#3F51B5"));
             icon.setImageDrawable(drawable);
 
             checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
