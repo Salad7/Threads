@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/colorPrimary"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout7">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignStart="@+id/editText"
+            android:layout_marginTop="24dp"
+            android:textColor="#ffffff"
+            android:textSize="12dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginBottom="8dp"
+            android:text="High School" />
+        <EditText
+            android:id="@+id/highschool_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:backgroundTint="#ffffff"
+            android:shadowColor="#ffffff"
+            android:textColor="#ffffff"
+            android:hint="Ex. Vance highschool"
+            android:textColorHighlight="#ffffff"
+            android:textColorHint="#ffffff"
+            android:textColorLink="#ffffff" />
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayout7"
+        android:layout_alignParentStart="true"
+        android:id="@+id/linearLayout8">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignStart="@+id/editText"
+            android:layout_marginTop="24dp"
+            android:textColor="#ffffff"
+            android:textSize="12dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginBottom="8dp"
+            android:text="Cell phone Number" />
+        <EditText
+            android:id="@+id/phone_ex"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:backgroundTint="#ffffff"
+            android:shadowColor="#ffffff"
+            android:textColor="#ffffff"
+            android:hint=" 980-291-2001"
+            android:textColorHighlight="#ffffff"
+            android:textColorHint="#ffffff"
+            android:textColorLink="#ffffff" />
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayout8"
+        android:layout_alignParentStart="true"
+        android:id="@+id/linearLayout9">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignStart="@+id/editText"
+            android:layout_marginTop="24dp"
+            android:textColor="#ffffff"
+            android:textSize="12dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginBottom="8dp"
+            android:textColorHint="#ffffff"
+            android:hint="Password" />
+        <EditText
+            android:id="@+id/password_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:ems="10"
+            android:inputType="textPassword"
+            android:backgroundTint="#ffffff"
+            android:shadowColor="#ffffff"
+            android:textColor="#ffffff"
+            android:hint="JDoe113"
+            android:textColorHighlight="#ffffff"
+            android:textColorHint="#ffffff"
+            android:textColorLink="#ffffff" />
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayout9"
+        android:layout_alignParentStart="true"
+        android:id="@+id/linearLayout10">
+        <TextView
+            android:id="@+id/textView14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignStart="@+id/editText"
+            android:layout_marginTop="24dp"
+            android:textColor="#ffffff"
+            android:textSize="12dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginBottom="8dp"
+            android:text="Requested Wage" />
+        <EditText
+            android:id="@+id/city_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:backgroundTint="#ffffff"
+            android:shadowColor="#ffffff"
+            android:textColor="#ffffff"
+            android:hint="Ex. 22.00"
+            android:textColorHighlight="#ffffff"
+            android:textColorHint="#ffffff"
+            android:textColorLink="#ffffff" />
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayout10"
+        android:layout_alignParentStart="true">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignStart="@+id/editText"
+            android:layout_marginTop="24dp"
+            android:textColor="#ffffff"
+            android:textSize="12dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginBottom="8dp"
+            android:text="What makes you special" />
+        <EditText
+            android:id="@+id/zip_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:backgroundTint="#ffffff"
+            android:shadowColor="#ffffff"
+            android:textColor="#ffffff"
+            android:hint="Ex. Im a problem solver, life has thrown me some curveballs but"
+            android:textColorHighlight="#ffffff"
+            android:textColorHint="#ffffff"
+            android:textColorLink="#ffffff" />
+
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:background="@drawable/edittextborder"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginEnd="17dp"
+        android:textColor="#ffffff"
+        android:textAllCaps="false"
+        android:text="Coninue" />
+
+    <Button
+        android:id="@+id/button5"
+        android:layout_width="wrap_content"
+        android:background="@drawable/edittextborder"
+        android:layout_alignTop="@+id/button2"
+        android:layout_marginEnd="14dp"
+        android:layout_height="30dp"
+        android:textColor="#ffffff"
+        android:textAllCaps="false"
+        android:layout_toStartOf="@+id/button2"
+        android:text="Cancel" />
+
+</RelativeLayout>
