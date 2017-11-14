@@ -28,6 +28,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -88,9 +90,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         FirebaseApp.initializeApp(this);
         database = FirebaseDatabase.getInstance();
         threadRef = database.getReference();
-        NewtonCradleLoading newtonCradleLoading; newtonCradleLoading = (NewtonCradleLoading)findViewById(R.id.newton_cradle_loading);
-        newtonCradleLoading.setLoadingColor(R.color.colorPrimaryDark);
-        newtonCradleLoading.start();
         avLoadingIndicatorView = findViewById(R.id.avi);
         avLoadingIndicatorView.show();
         if (getIntent().getExtras() != null) {
@@ -140,12 +139,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
                 }
             });
-
-
         }
-        //Date d = new Date();
-        //Calendar c
-        //Log.d("time in millis",d.getTime()/1000+"");
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map11);
         //if (mapFragment != null) {
         mapFragment.getMapAsync(this);
@@ -155,24 +149,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mPlaceDetectionClient = Places.PlaceDetectionApi;
         // Construct a FusedLocationProviderClient.
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-//        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-//                .findFragmentById(R.id.map);
-//        mapFragment.getMapAsync(this);
-        //for(int i = 0; i < 15; i)
 
-        //printNearLocs();
 
 
     }
-
-    private void printNearLocs(){
-        for(int i =0; i < coors_near_me.size(); i++){
-            //Log.d("coors ",i+" Lat "+coors_near_me.get(i).lat+" Lon "+coors_near_me.get(i).lon);
-        }
-    }
-
-
 
     private void startThread(int i, String testKey, DataSnapshot dataSnapshot){
         Log.d("MainActivity "," called startThread");
@@ -227,16 +207,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    public void dropPins(){
-        for(int n = 0; n < coors_near_me.size(); n++){
-            //if(n%10 == 0) {
-                mMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(coors_near_me.get(n).lat, coors_near_me.get(n).lon))
-                        .title("Graph"));
-            //}
 
-        }
-    }
     private void createThread(){
         Double lat = convertDouble(mLastKnownLocation.getLatitude());
         Double lon =  convertDouble(mLastKnownLocation.getLongitude());
@@ -248,7 +219,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         editor.putString("threadCode", pureKey);
         editor.apply();
         Intent intent = new Intent(MainActivity.this, CreateThread.class);
-        startActivity(intent);
+       // startActivity(intent);
         //Log.d("should CreateThread", "SS");
     }
     private void getLocationPermission() {
@@ -280,7 +251,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     mLocationPermissionGranted = true;
                     Intent i = new Intent(this,MainActivity.class);
-                    startActivity(i);
+                   // startActivity(i);
                 }
             }
         }
@@ -336,15 +307,19 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                         }
                         //Toast.makeText(getApplicationContext(),mLastKnownLocation.getLongitude() + " " + mLastKnownLocation.getLatitude(),Toast.LENGTH_SHORT).show();
                         Log.d("MainActivity ",mLastKnownLocation.getLatitude()+" "+mLastKnownLocation.getLongitude());
-
-
-
                         coors_near_me =  ThreadFinder.runSimulationQuad2(convertDouble(mLastKnownLocation.getLatitude())-.00005,convertDouble(mLastKnownLocation.getLongitude())-.00005,MainActivity.this);
-                        //searchIfThreadExistsInFirebase();
-                        mMap.addMarker(new MarkerOptions()
-                                .position(new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()))
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE))
-                                .title("Graph"));
+                        Toast.makeText(MainActivity.this,"Size of coors near me = "+coors_near_me.size(), Toast.LENGTH_SHORT ).show();
+                        PolylineOptions rectOptions = new PolylineOptions();
+                        rectOptions.color(Color.parseColor("#448aff"));
+                        //for(int n = 0; n < coors_near_me.size(); n++){
+                            // Instantiates a new Polyline object and adds points to define a rectangle
+                            rectOptions.add(new LatLng(coors_near_me.get(0).lat, coors_near_me.get(0).lon));
+                            rectOptions.add(new LatLng(coors_near_me.get(0).lat, coors_near_me.get(120).lon));
+                            rectOptions.add(new LatLng(coors_near_me.get(120).lat, coors_near_me.get(120).lon));
+                            rectOptions.add(new LatLng(coors_near_me.get(120).lat, coors_near_me.get(0).lon));
+                            rectOptions.add(new LatLng(coors_near_me.get(0).lat, coors_near_me.get(0).lon));
+                        //}
+                        Polyline polyline = mMap.addPolyline(rectOptions);
 
 
                     }
@@ -370,15 +345,48 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        // Add a marker in Sydney and move the camera
-        //LatLng sydney = new LatLng(-34, 151);
-        //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        // Turn on the My Location layer and the related control on the map.
         updateLocationUI();
-        // Get the current location of the device and set the position of the map.
         getDeviceLocation();
-        //Log.d("MapReady","MapReady");
+        mMap.setMinZoomPreference(20);
+        //new ThreadAsyncTask().execute();
+        threadRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Object[] keys = ((HashMap) dataSnapshot.child("Threads").getValue()).keySet().toArray();
+                String[] decoder = new String[keys.length];
+                for(int i = 0; i < decoder.length; i++){
+                    String k = (keys[i].toString().replace("!",".")).replace("*","d");
+                    decoder[i] = k;
+                    Log.d("kvalue",k);
+                    //int indexOfBar = k.indexOf('|');
+                    String parts[] =  k.split("d");
+                    Log.d("split",parts[0]+"ad dasd");
+                    Double lat2 = Double.parseDouble(k.split("d")[0]);
+                    Double lon2 = Double.parseDouble(k.split("d")[1]);
+                    Double d = distance(mLastKnownLocation.getLatitude(),lat2,mLastKnownLocation.getLongitude(),lon2,0.0,0.0);
+                    Log.d("Distance from me",d+"");
+                    Toast.makeText(MainActivity.this," Distance from thread "+d,Toast.LENGTH_LONG).show();
+                    if(d < 25){
+                        //Log.d("Found thread, ", )
+                        Double lat = lat2;
+                        Double lon = lon2;
+                        String[] pos1 = (lat + "").split("\\.");
+                        String[] pos2 = (lon + "").split("\\.");
+                        String testKey = pos1[0] + "!" + pos1[1] + "*" + pos2[0] + "!" + pos2[1];
+                            startThread(i,testKey,dataSnapshot);
+                            i = decoder.length;
+                            isFound = true;
+                    }
+                }
+                Log.d("MainActivity keys",((HashMap) dataSnapshot.child("Threads").getValue()).keySet().toArray()+"");
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 
@@ -396,6 +404,35 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
+    }
+
+    /**
+     * Calculate distance between two points in latitude and longitude taking
+     * into account height difference. If you are not interested in height
+     * difference pass 0.0. Uses Haversine method as its base.
+     *
+     * lat1, lon1 Start point lat2, lon2 End point el1 Start altitude in meters
+     * el2 End altitude in meters
+     * @returns Distance in Meters
+     */
+    public static double distance(double lat1, double lat2, double lon1,
+                                  double lon2, double el1, double el2) {
+
+        final int R = 6371; // Radius of the earth
+
+        double latDistance = Math.toRadians(lat2 - lat1);
+        double lonDistance = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double distance = R * c * 1000; // convert to meters
+
+        double height = el1 - el2;
+
+        distance = Math.pow(distance, 2) + Math.pow(height, 2);
+
+        return Math.sqrt(distance);
     }
 
 
@@ -429,11 +466,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                         String[] pos2 = (lon + "").split("\\.");
                         String testKey = pos1[0] + "!" + pos1[1] + "*" + pos2[0] + "!" + pos2[1];
                         if (dataSnapshot.child("Threads").child(testKey).exists()) {
-                            mMap.addMarker(new MarkerOptions()
-                                    .position(new LatLng(lat, lon))
-                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-                                    .title("Graph"));
-
                             startThread(i,testKey,dataSnapshot);
                             i = coors_near_me.size()+1;
                             isFound = true;
@@ -443,8 +475,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                         Log.d("MainActivity"," createThread called");
                         createThread();
                     }
-                //Toast.makeText(MainActivity.this,"Done parsing.",Toast.LENGTH_SHORT).show();
-                    dropPins();
 
                 }
 
