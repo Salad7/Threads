@@ -196,7 +196,7 @@
 
     <Button
         android:id="@+id/button2"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:background="@drawable/edittextborder"
         android:layout_height="30dp"
         android:layout_alignParentBottom="true"
@@ -209,7 +209,7 @@
 
     <Button
         android:id="@+id/button5"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:background="@drawable/edittextborder"
         android:layout_alignTop="@+id/button2"
         android:layout_marginEnd="14dp"
