@@ -4,219 +4,134 @@
     android:background="@color/colorPrimary"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:orientation="vertical"
+
+    <TextView
+        android:text="Earliest start date"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/linearLayout7">
-        <TextView
-            android:layout_width="wrap_content"
+        android:textColor="#ffffff"
+        android:textSize="18dp"
+        android:id="@+id/e"
+        android:layout_marginStart="16dp"
+        android:layout_below="@+id/textView19"
+        android:layout_marginTop="85dp"
+        android:visibility="visible" />
+
+    <LinearLayout
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        android:layout_below="@+id/e"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/linearLayout12">
+
+        <Button
+            android:text="Immediately"
+            android:background="@drawable/edittextborder"
+            android:layout_width="110dp"
+            android:textColor="#ffffff"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_alignStart="@+id/editText"
-            android:layout_marginTop="24dp"
-            android:textColor="#ffffff"
-            android:textSize="12dp"
-            android:layout_marginStart="28dp"
-            android:layout_marginBottom="8dp"
-            android:text="High School" />
-        <EditText
-            android:id="@+id/highschool_et"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:backgroundTint="#ffffff"
-            android:shadowColor="#ffffff"
+            android:id="@+id/immed_btn" />
+
+        <Button
+            android:text="1-2 Weeks"
+            android:background="@drawable/edittextborder"
+            android:layout_marginStart="16dp"
+            android:layout_width="110dp"
             android:textColor="#ffffff"
-            android:hint="Ex. Vance highschool"
-            android:textColorHighlight="#ffffff"
-            android:textColorHint="#ffffff"
-            android:textColorLink="#ffffff" />
+            android:layout_height="wrap_content"
+            android:id="@+id/twoWeeksBtn"
+            android:layout_alignBaseline="@+id/threeWBtn"
+            android:layout_alignBottom="@+id/threeWBtn"
+            android:layout_toEndOf="@+id/threeWBtn" />
+
+        <Button
+            android:text="2+ Weeks"
+            android:layout_marginStart="16dp"
+            android:layout_width="110dp"
+            android:textColor="#ffffff"
+            android:layout_height="wrap_content"
+            android:id="@+id/threeWBtn"
+            android:background="@drawable/edittextborder"
+            android:layout_alignBaseline="@+id/immed_btn"
+            android:layout_alignBottom="@+id/immed_btn"
+            android:layout_toEndOf="@+id/immed_btn" />
 
 
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:orientation="vertical"
+
+    <TextView
+        android:text="Preference"
+        android:layout_marginTop="178dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/linearLayout7"
-        android:layout_alignParentStart="true"
-        android:id="@+id/linearLayout8">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignStart="@+id/editText"
-            android:layout_marginTop="24dp"
-            android:textColor="#ffffff"
-            android:textSize="12dp"
-            android:layout_marginStart="28dp"
-            android:layout_marginBottom="8dp"
-            android:text="Cell phone Number" />
-        <EditText
-            android:id="@+id/phone_ex"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:backgroundTint="#ffffff"
-            android:shadowColor="#ffffff"
-            android:textColor="#ffffff"
-            android:hint=" 980-291-2001"
-            android:textColorHighlight="#ffffff"
-            android:textColorHint="#ffffff"
-            android:textColorLink="#ffffff" />
-
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/linearLayout8"
-        android:layout_alignParentStart="true"
-        android:id="@+id/linearLayout9">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignStart="@+id/editText"
-            android:layout_marginTop="24dp"
-            android:textColor="#ffffff"
-            android:textSize="12dp"
-            android:layout_marginStart="28dp"
-            android:layout_marginBottom="8dp"
-            android:textColorHint="#ffffff"
-            android:hint="Password" />
-        <EditText
-            android:id="@+id/password_et"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:ems="10"
-            android:inputType="textPassword"
-            android:backgroundTint="#ffffff"
-            android:shadowColor="#ffffff"
-            android:textColor="#ffffff"
-            android:hint="JDoe113"
-            android:textColorHighlight="#ffffff"
-            android:textColorHint="#ffffff"
-            android:textColorLink="#ffffff" />
-
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/linearLayout9"
-        android:layout_alignParentStart="true"
-        android:id="@+id/linearLayout10">
-        <TextView
-            android:id="@+id/textView14"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignStart="@+id/editText"
-            android:layout_marginTop="24dp"
-            android:textColor="#ffffff"
-            android:textSize="12dp"
-            android:layout_marginStart="28dp"
-            android:layout_marginBottom="8dp"
-            android:text="Requested Wage" />
-        <EditText
-            android:id="@+id/city_et"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:backgroundTint="#ffffff"
-            android:shadowColor="#ffffff"
-            android:textColor="#ffffff"
-            android:hint="Ex. 22.00"
-            android:textColorHighlight="#ffffff"
-            android:textColorHint="#ffffff"
-            android:textColorLink="#ffffff" />
-
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/linearLayout10"
-        android:layout_alignParentStart="true">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignStart="@+id/editText"
-            android:layout_marginTop="24dp"
-            android:textColor="#ffffff"
-            android:textSize="12dp"
-            android:layout_marginStart="28dp"
-            android:layout_marginBottom="8dp"
-            android:text="What makes you special" />
-        <EditText
-            android:id="@+id/zip_et"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:backgroundTint="#ffffff"
-            android:shadowColor="#ffffff"
-            android:textColor="#ffffff"
-            android:hint="Ex. Im a problem solver, life has thrown me some curveballs but"
-            android:textColorHighlight="#ffffff"
-            android:textColorHint="#ffffff"
-            android:textColorLink="#ffffff" />
-
-
-    </LinearLayout>
+        android:id="@+id/textView19"
+        android:visibility="visible"
+        android:textColor="#ffffff"
+        android:textSize="18dp"
+        android:layout_marginStart="12dp"
+        android:layout_alignParentTop="true" />
 
     <Button
-        android:id="@+id/button2"
-        android:layout_width="100dp"
+        android:text="Submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/submit"
+        android:textColor="#ffffff"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
         android:background="@drawable/edittextborder"
-        android:layout_height="30dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="15dp"
-        android:layout_marginEnd="17dp"
+        android:layout_centerHorizontal="true" />
+
+    <LinearLayout
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout11"
+        android:visibility="visible"
+        android:layout_marginTop="14dp"
+        android:layout_below="@+id/textView19"
+        android:layout_alignStart="@+id/linearLayout12">
+    <Button
+        android:text="Full Time"
+        android:background="@drawable/edittextborder"
+        android:layout_width="110dp"
         android:textColor="#ffffff"
-        android:textAllCaps="false"
-        android:text="Coninue" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/ftime_btn" />
 
     <Button
-        android:id="@+id/button5"
-        android:layout_width="100dp"
+        android:text="Part Time"
         android:background="@drawable/edittextborder"
-        android:layout_alignTop="@+id/button2"
-        android:layout_marginEnd="14dp"
-        android:layout_height="30dp"
+        android:layout_marginStart="16dp"
+        android:layout_width="110dp"
         android:textColor="#ffffff"
-        android:textAllCaps="false"
-        android:layout_toStartOf="@+id/button2"
-        android:text="Cancel" />
+        android:layout_height="wrap_content"
+        android:id="@+id/ptimeBtn"
+        android:layout_alignBaseline="@+id/threeWBtn"
+        android:layout_alignBottom="@+id/threeWBtn"
+        android:layout_toEndOf="@+id/threeWBtn" />
+
+    <Button
+        android:text="Temporary"
+        android:layout_marginStart="16dp"
+        android:layout_width="110dp"
+        android:textColor="#ffffff"
+        android:layout_height="wrap_content"
+        android:id="@+id/tempBtn"
+        android:background="@drawable/edittextborder"
+
+        android:layout_alignBaseline="@+id/immed_btn"
+        android:layout_alignBottom="@+id/immed_btn"
+        android:layout_toEndOf="@+id/immed_btn" />
+    </LinearLayout>
+
 
 </RelativeLayout>

@@ -21,7 +21,7 @@
             android:layout_marginBottom="8dp"
             android:text="Country" />
         <EditText
-            android:id="@+id/email_et"
+            android:id="@+id/country_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignStart="@+id/editText"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:textColor="#ffffff"
             android:textSize="12dp"
             android:layout_marginStart="28dp"
@@ -90,7 +90,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignStart="@+id/editText"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:textColor="#ffffff"
             android:textSize="12dp"
             android:layout_marginStart="28dp"
@@ -130,14 +130,14 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignStart="@+id/editText"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:textColor="#ffffff"
             android:textSize="12dp"
             android:layout_marginStart="28dp"
             android:layout_marginBottom="8dp"
             android:text="Requested Wage" />
         <EditText
-            android:id="@+id/city_et"
+            android:id="@+id/wage_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
@@ -161,20 +161,21 @@
         android:orientation="vertical"
         android:layout_height="wrap_content"
         android:layout_below="@+id/linearLayout10"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:id="@+id/linearLayout13">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignStart="@+id/editText"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:textColor="#ffffff"
             android:textSize="12dp"
             android:layout_marginStart="28dp"
             android:layout_marginBottom="8dp"
             android:text="What makes you special" />
         <EditText
-            android:id="@+id/zip_et"
+            android:id="@+id/highschool_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
@@ -195,7 +196,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/contBtn"
         android:layout_width="100dp"
         android:background="@drawable/edittextborder"
         android:layout_height="30dp"
@@ -211,12 +212,50 @@
         android:id="@+id/button5"
         android:layout_width="100dp"
         android:background="@drawable/edittextborder"
-        android:layout_alignTop="@+id/button2"
+        android:layout_alignTop="@+id/contBtn"
         android:layout_marginEnd="14dp"
         android:layout_height="30dp"
         android:textColor="#ffffff"
         android:textAllCaps="false"
-        android:layout_toStartOf="@+id/button2"
+        android:layout_toStartOf="@+id/contBtn"
         android:text="Cancel" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayout13"
+        android:layout_alignParentStart="true">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignStart="@+id/editText"
+            android:layout_marginTop="16dp"
+            android:textColor="#ffffff"
+            android:textSize="12dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginBottom="8dp"
+            android:text="What makes you special" />
+        <EditText
+            android:id="@+id/special_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:backgroundTint="#ffffff"
+            android:shadowColor="#ffffff"
+            android:textColor="#ffffff"
+            android:hint="Ex. Im a problem solver, life has thrown me some curveballs but"
+            android:textColorHighlight="#ffffff"
+            android:textColorHint="#ffffff"
+            android:textColorLink="#ffffff" />
+
+
+    </LinearLayout>
 
 </RelativeLayout>

@@ -16,6 +16,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.msalad.threads.Register.RegisterActivity;
 import com.google.android.gms.location.places.GeoDataApi;
 import com.google.android.gms.location.places.PlaceDetectionApi;
 import com.google.android.gms.location.places.Places;
@@ -62,10 +63,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     // The entry point to the Fused Location Provider.
     private FusedLocationProviderClient mFusedLocationProviderClient;
 
-    // A default location (Sydney, Australia) and default zoom to use when location permission is
+
     // not granted.
     //private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
-    private static final int DEFAULT_ZOOM = 15;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean mLocationPermissionGranted;
     private DatabaseReference threadRef;
@@ -92,6 +92,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         threadRef = database.getReference();
         avLoadingIndicatorView = findViewById(R.id.avi);
         avLoadingIndicatorView.show();
+        //Intent i = new Intent(this,RegisterActivity.class);
+        //startActivity(i);
         if (getIntent().getExtras() != null) {
             threadRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -298,12 +300,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                             mLastKnownLocation = (Location) task.getResult();
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                     new LatLng(mLastKnownLocation.getLatitude(),
-                                            mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
+                                            mLastKnownLocation.getLongitude()), 17));
                         } else {
-                            //Log.d(TAG, "Current location is null. Using defaults.");
-                            //Log.e(TAG, "Exception: %s", task.getException());
-                            //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastKnownLocation.,2.3), DEFAULT_ZOOM));
-                            //mMap.getUiSettings().setMyLocationButtonEnabled(false);
                         }
                         //Toast.makeText(getApplicationContext(),mLastKnownLocation.getLongitude() + " " + mLastKnownLocation.getLatitude(),Toast.LENGTH_SHORT).show();
                         Log.d("MainActivity ",mLastKnownLocation.getLatitude()+" "+mLastKnownLocation.getLongitude());
@@ -347,7 +345,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         updateLocationUI();
         getDeviceLocation();
-        mMap.setMinZoomPreference(20);
+        mMap.setMinZoomPreference(17);
         //new ThreadAsyncTask().execute();
         threadRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

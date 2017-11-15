@@ -71,6 +71,11 @@
             android:windowSoftInputMode="stateHidden"
             android:label="@string/title_activity_maps">
         </activity>
+        <activity
+            android:name=".Register.RegisterActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:label="@string/title_activity_maps">
+        </activity>
 
     </application>
 
